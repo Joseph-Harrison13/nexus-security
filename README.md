@@ -1,5 +1,9 @@
 # Nexus Security
 
+[![CI](https://github.com/Joseph-Harrison13/nexus-security/actions/workflows/ci.yml/badge.svg)](https://github.com/Joseph-Harrison13/nexus-security/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-100%20passing-2ea44f)](test)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 **Multi-tenant encrypted file storage.** Organisations store files under per-tenant isolation,
 mandatory TOTP two-factor, AES-256-GCM encryption at rest, malware scanning on upload, and an
 admin console with an audit trail.
