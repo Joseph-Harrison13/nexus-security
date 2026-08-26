@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact Us — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<meta name="description" content="Get in touch with Nexus Security. Request a free security assessment, ask about our plans, or get help protecting your business.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contact Us — Nexus Security">
+<meta property="og:description" content="Request a free security assessment or ask about our plans. We'll get back to you within one business day.">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact Us — Nexus Security">
+<meta name="twitter:description" content="Get in touch for a free security assessment. We will get back to you within one business day.">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" id="nav-pricing">Pricing</button>
+    <button onclick="window.location.href='/pages/threats.html'" id="nav-threats">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'" id="nav-security">Security</button>
+    <button onclick="showPage('contact')" class="active" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-contact">
+ 
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <div class="section-tag">Get In Touch</div>
+      <h1>Let's Secure Your <span style="color:#33302b">Business</span></h1>
+      <p>Whether you're ready to sign up or just want to ask a few questions, we're here. No sales pressure. Just honest conversation about how we can help.</p>
+ 
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          <div>
+            <div class="contact-item-text">Email Us</div>
+            <div class="contact-item-val">your@email.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div>
+            <div class="contact-item-text">Call Us</div>
+            <div class="contact-item-val">(555) 000-0000</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <div class="contact-item-text">We're Local</div>
+            <div class="contact-item-val">Your City, Your State</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⏰</div>
+          <div>
+            <div class="contact-item-text">Response Time</div>
+            <div class="contact-item-val">Within 2 hours (business days)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="contact-form">
+      <div class="form-title">Send Us a Message</div>
+      <div class="form-sub">Fill out the form and we'll be in touch shortly.</div>
+ 
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input id="contactFirst" type="text" placeholder="First Name" />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input id="contactLast" type="text" placeholder="Last Name" />
+        </div>
+      </div>
+ 
+      <div class="form-group">
+        <label>Business Email</label>
+        <input id="contactEmail" type="email" placeholder="jane@yourbusiness.com" />
+      </div>
+ 
+      <div class="form-group">
+        <label>Business Name</label>
+        <input id="contactBiz" type="text" placeholder="Your Business Name" />
+      </div>
+ 
+      <div class="form-group">
+        <label>I'm Interested In</label>
+        <select id="contactPlan">
+          <option>Starter Plan — $55/mo</option>
+          <option>Growth Plan — $99/mo</option>
+          <option>Pro Plan — $179/mo</option>
+          <option>Custom Plan</option>
+          <option>Just have questions</option>
+        </select>
+      </div>
+ 
+      <div class="form-group">
+        <label>Message</label>
+        <textarea id="contactMessage" placeholder="Tell us a bit about your business and what you're looking for..."></textarea>
+      </div>
+ 
+      <button class="form-submit" onclick="handleSubmit()">Send Message →</button>
+ 
+      <div class="success-msg" id="successMsg">
+        ✅ Message sent! We'll be in touch within 2 business hours.
+      </div>
+    </div>
+  </div>
+ 
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">NEXUS<span>SEC</span></div>
+        <p class="footer-brand-desc">Enterprise-grade cybersecurity and cloud protection built for local businesses. Real people, local support, serious security.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('home')">Cloud Storage</button></li>
+          <li><button onclick="showPage('home')">Threat Monitoring</button></li>
+          <li><button onclick="showPage('home')">Access Control</button></li>
+          <li><button onclick="showPage('home')">Disaster Recovery</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-col-links">
+          <li><button onclick="window.location.href='/pages/about.html'">About Us</button></li>
+          <li><button onclick="window.location.href='/pages/security.html'">Security</button></li>
+          <li><button onclick="window.location.href='/pages/pricing.html'">Pricing</button></li>
+          <li><button onclick="window.location.href='/pages/case-studies.html'">How We Help</button></li>
+          <li><button onclick="window.location.href='/pages/resources.html'">Security Tips</button></li>
+          <li><button onclick="window.location.href='/pages/faq.html'">FAQ</button></li>
+          <li><button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button></li>
+          <li><button onclick="window.location.href='/pages/privacy.html'">Privacy Policy</button></li>
+          <li><button onclick="window.location.href='/pages/terms.html'">Terms of Service</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Reach Us</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('contact')">your@email.com</button></li>
+          <li><button onclick="showPage('contact')">(555) 000-0000</button></li>
+          <li><button onclick="showPage('contact')">Your City, Your State</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo">NEXUS<span>SEC</span></div>
+      <div class="footer-copy">© 2026 Nexus Security, LLC. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="../js/script.js"></script>
+<script>
+// Prefill from the custom-plan calculator, if the visitor came from there.
+(function () {
+  const quote = sessionStorage.getItem('customPlanQuote');
+  if (!quote) return;
+  const msg = document.getElementById('contactMessage');
+  const plan = document.getElementById('contactPlan');
+  if (msg) msg.value = quote;
+  if (plan) { for (const o of plan.options) { if (o.text === 'Custom Plan') { o.selected = true; break; } } }
+  sessionStorage.removeItem('customPlanQuote');
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

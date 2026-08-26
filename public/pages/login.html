@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Client Login — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" id="nav-pricing">Pricing</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" class="active" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-login">
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-logo">Nexus Security · Client Portal</div>
+ 
+      <!-- ── STEP 1: SIGN IN ── -->
+      <div id="stepSignin">
+        <div class="login-title">Welcome Back</div>
+        <div class="login-sub">Sign in to access your secure dashboard</div>
+        <div id="loginError" class="login-error">Incorrect email or password. Please try again.</div>
+        <div class="login-field"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@yourbusiness.com"/></div>
+        <div class="login-field">
+          <label>Password</label>
+          <div class="login-field-pass-wrap">
+            <input type="password" id="loginPass" placeholder="••••••••••"/>
+            <button type="button" class="pass-toggle" onclick="togglePassword('loginPass', this)" aria-label="Show password" title="Show password">
+              <svg id="loginPass-icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="loginPass-icon-eyeoff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="login-options">
+          <label><input type="checkbox"/> Remember me</label>
+          <button class="login-forgot" onclick="window.location.href='/pages/forgot-password.html'">Forgot password?</button>
+        </div>
+        <button class="login-btn" onclick="handleLogin()">Sign In →</button>
+        <div style="display:flex;align-items:center;gap:12px;margin:20px 0">
+          <div style="flex:1;height:1px;background:#ebe3d7"></div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#948a7d">OR</div>
+          <div style="flex:1;height:1px;background:#ebe3d7"></div>
+        </div>
+        <button onclick="showStep('stepSignup')" style="width:100%;padding:13px;background:transparent;color:#33302b;border:1px solid #ebe3d7;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#33302b'" onmouseout="this.style.borderColor='#ebe3d7'">Start Free Trial</button>
+      </div>
+ 
+      <!-- ── STEP 2: 2FA ── -->
+      <div id="step2FA" style="display:none">
+        <div style="text-align:center;font-size:36px;margin-bottom:16px" id="verifyIcon">🔐</div>
+        <div class="login-title" id="verifyTitle">Verify Identity</div>
+        <div class="login-sub" id="verifySub">Enter the 6-digit code sent to your email ending in <span id="emailHint" style="color:#33302b"></span></div>
+        <div id="twoFAError" class="login-error">Incorrect code. Please try again.</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin:24px 0">
+          <input class="code-box" id="c1" maxlength="1" oninput="codeMove(this,'c2')" onkeydown="codeDel(event,this,'')"/>
+          <input class="code-box" id="c2" maxlength="1" oninput="codeMove(this,'c3')" onkeydown="codeDel(event,this,'c1')"/>
+          <input class="code-box" id="c3" maxlength="1" oninput="codeMove(this,'c4')" onkeydown="codeDel(event,this,'c2')"/>
+          <input class="code-box" id="c4" maxlength="1" oninput="codeMove(this,'c5')" onkeydown="codeDel(event,this,'c3')"/>
+          <input class="code-box" id="c5" maxlength="1" oninput="codeMove(this,'c6')" onkeydown="codeDel(event,this,'c4')"/>
+          <input class="code-box" id="c6" maxlength="1" oninput="codeMove(this,'')"   onkeydown="codeDel(event,this,'c5')"/>
+        </div>
+        <button class="login-btn" onclick="handle2FA()">Verify & Sign In →</button>
+        <div style="text-align:center;margin-top:16px;font-size:12px;color:#948a7d;font-family:'DM Sans',sans-serif;letter-spacing:1px">
+          Didn't receive a code?
+          <button onclick="resendCode()" style="background:none;border:none;color:#33302b;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline">Resend</button>
+          &nbsp;·&nbsp;
+          <button onclick="showStep('stepSignin')" style="background:none;border:none;color:#8a8074;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline">Back</button>
+        </div>
+      </div>
+ 
+      <!-- ── STEP 3: CREATE ACCOUNT ── -->
+      <div id="stepSignup" style="display:none">
+        <div class="login-title" style="font-size:26px">Start Your Free Trial</div>
+        <div class="login-sub">21 days free, full access — no credit card required.</div>
+        <div id="signupError" class="login-error"></div>
+        <div id="signupSuccess" style="display:none;background:rgba(126,201,155,0.08);border:1px solid rgba(126,201,155,0.25);border-radius:8px;padding:12px 16px;color:#7ec99b;font-size:13px;margin-bottom:14px;text-align:center"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="login-field" style="margin-bottom:12px"><label>First Name</label><input type="text" id="signupFirst" placeholder="Jane"/></div>
+          <div class="login-field" style="margin-bottom:12px"><label>Last Name</label><input type="text" id="signupLast" placeholder="Smith"/></div>
+        </div>
+        <div class="login-field"><label>Business Name</label><input type="text" id="signupBiz" placeholder="Your Business Name"/></div>
+        <div class="login-field"><label>Email Address</label><input type="email" id="signupEmail" placeholder="you@yourbusiness.com"/></div>
+        <div class="login-field"><label>Password</label><input type="password" id="signupPass" placeholder="Min. 8 characters"/></div>
+        <div class="login-field"><label>Confirm Password</label><input type="password" id="signupConfirm" placeholder="Repeat password"/></div>
+        <div class="login-field">
+          <label>Plan</label>
+          <select id="signupPlan" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:13px 16px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;appearance:none;cursor:pointer">
+            <option value="Starter">Starter — $55/mo</option>
+            <option value="Growth" selected>Growth — $99/mo</option>
+            <option value="Pro">Pro — $179/mo</option>
+          </select>
+        </div>
+        <button onclick="handleSignup()" class="login-btn">Start Free Trial →</button>
+        <div style="text-align:center;margin-top:16px;font-size:12px;color:#948a7d;font-family:'DM Sans',sans-serif;letter-spacing:1px">
+          Already have an account?
+          <button onclick="showStep('stepSignin')" style="background:none;border:none;color:#33302b;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline">Sign in</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ======== DASHBOARD — SEPARATE PAGE PER SECTION ======== -->
+
+<!-- Toast notification -->
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="../js/script.js"></script>
+<script>
+// Deep-link into the free-trial signup: /pages/login.html?signup=1&plan=Growth
+(function () {
+  const params = new URLSearchParams(location.search);
+  if (params.get('signup') === '1' || location.hash === '#signup') {
+    if (typeof showStep === 'function') showStep('stepSignup');
+    const plan = params.get('plan');
+    const sel  = document.getElementById('signupPlan');
+    if (plan && sel && [...sel.options].some(o => o.value === plan)) sel.value = plan;
+  }
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

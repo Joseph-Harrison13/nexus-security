@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>User Management — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../css/styles.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" id="nav-pricing">Pricing</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-dash-users">
+  <div class="dash-layout">
+    <div class="dash-sidebar" id="sb-users"></div>
+    <div class="dash-main">
+      <div id="dash-tabs"></div>
+      <div class="dash-header"><div class="dash-greeting">User Management</div><div class="dash-date">0 of 10 seats used</div></div>
+      <div id="addUserPanel" style="display:none;background:#ffffff;border:1px solid #ebe3d7;border-radius:12px;padding:24px;margin-bottom:20px">
+        <div style="font-family:'Poppins',sans-serif;font-size:18px;color:#2b2723;margin-bottom:16px;font-weight:600">Invite New User</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end">
+          <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Full Name</div><input id="newUserName" type="text" placeholder="Full Name" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+          <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Email</div><input id="newUserEmail" type="email" placeholder="email@company.com" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+          <div style="display:flex;gap:8px">
+            <button onclick="addUser()" style="background:#33302b;color:#faf6f0;border:none;border-radius:8px;padding:11px 20px;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;white-space:nowrap">Send Invite</button>
+            <button onclick="document.getElementById('addUserPanel').style.display='none'" style="background:transparent;color:#8a8074;border:1px solid #ebe3d7;border-radius:8px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:10px;cursor:pointer">✕</button>
+          </div>
+        </div>
+      </div>
+      <div class="dash-section-head">
+        <div class="dash-section-title">Team Members</div>
+        <button class="dash-section-action" onclick="document.getElementById('addUserPanel').style.display='block'">+ Add User</button>
+      </div>
+      <div class="activity-feed" id="userList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="../../js/script.js"></script>
+<script>document.addEventListener('DOMContentLoaded', initDashboard);</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>JS Test</title></head>
+<body style="background:#f5efe7;color:#2b2723;font-family:sans-serif;padding:40px">
+<h2>JavaScript Click Test</h2>
+<p id="status" style="color:#948a7d;margin:20px 0">Click the button below:</p>
+<button onclick="document.getElementById('status').textContent='✅ JavaScript works! Clicked at '+new Date().toLocaleTimeString()"
+  style="padding:16px 32px;font-size:18px;background:#0e9a86;color:#2b2723;border:none;border-radius:8px;cursor:pointer">
+  Click Me
+</button>
+<hr style="margin:40px 0;border-color:#ddd3c4">
+<h3>Navigation Test</h3>
+<p style="color:#948a7d;margin-bottom:16px">These should navigate to other pages:</p>
+<a href="/pages/about.html" style="display:inline-block;margin:8px;padding:12px 24px;background:#ffffff;color:#0e9a86;border:1px solid #0e9a86;border-radius:6px;text-decoration:none">About Page</a>
+<a href="/pages/login.html" style="display:inline-block;margin:8px;padding:12px 24px;background:#ffffff;color:#0e9a86;border:1px solid #0e9a86;border-radius:6px;text-decoration:none">Login Page</a>
+<hr style="margin:40px 0;border-color:#ddd3c4">
+<h3>Console Errors</h3>
+<div id="errors" style="background:#1a0000;border:1px solid #ff4444;border-radius:6px;padding:16px;font-family:monospace;font-size:13px;white-space:pre-wrap;min-height:60px;color:#ff8888">Listening for errors...</div>
+<script>
+var errs = [];
+window.onerror = function(msg, src, line, col, err) {
+  errs.push('ERROR: ' + msg + '\n  at ' + src + ':' + line + ':' + col);
+  document.getElementById('errors').textContent = errs.join('\n\n');
+};
+window.onunhandledrejection = function(e) {
+  errs.push('UNHANDLED PROMISE REJECTION: ' + e.reason);
+  document.getElementById('errors').textContent = errs.join('\n\n');
+};
+if (!errs.length) document.getElementById('errors').textContent = 'No errors detected on this page.';
+</script>
+</body>
+</html>

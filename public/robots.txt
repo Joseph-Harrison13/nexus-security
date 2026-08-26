@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /pages/dashboard/
+Disallow: /uploads/
+
+Sitemap: https://nexussecurity.com/sitemap.xml

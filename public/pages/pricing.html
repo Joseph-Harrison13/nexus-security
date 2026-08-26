@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Plans & Pricing — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<meta name="description" content="Simple, transparent pricing for cybersecurity and encrypted cloud storage. Plans start at $55/mo with no hidden fees. Starter, Growth, and Pro plans available.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Plans & Pricing — Nexus Security">
+<meta property="og:description" content="Cybersecurity and cloud storage plans starting at $55/mo. No contracts, no hidden fees. Cancel anytime.">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Plans & Pricing — Nexus Security">
+<meta name="twitter:description" content="Cybersecurity and cloud storage plans starting at $55/mo. No contracts, no hidden fees.">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" class="active" id="nav-pricing">Pricing</button>
+    <button onclick="window.location.href='/pages/threats.html'" id="nav-threats">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'" id="nav-security">Security</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-pricing">
+
+  <section class="section" style="padding-top:140px">
+    <div class="section-tag">What It Costs</div>
+    <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <p class="section-sub">No hidden fees. No surprises. Every plan includes email threat scanning powered by Proofpoint — starting at $55 a month.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Starter</div>
+        <div class="price-amount">$55<span>/mo</span></div>
+        <div class="price-desc">Great if you work alone or have a very small team just getting started.</div>
+        <ul class="price-features">
+          <li>Secure storage for all your important files</li>
+          <li>We watch for hackers and viruses</li>
+          <li>Up to 3 employees</li>
+          <li>Your files backed up every week</li>
+          <li>📧 Email threat scanning — 3 mailboxes</li>
+          <li>Support by email</li>
+        </ul>
+        <button class="btn-outline" style="width:100%" onclick="window.location.href='/pages/login.html?signup=1&amp;plan=Starter'">Start Free Trial</button>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-tier">Growth</div>
+        <div class="price-amount">$99<span>/mo</span></div>
+        <div class="price-desc">Perfect for growing businesses with a small team and more files to protect.</div>
+        <ul class="price-features">
+          <li>Plenty of secure storage for your whole business</li>
+          <li>Instant alerts if anything suspicious happens</li>
+          <li>Up to 10 employees</li>
+          <li>Your files backed up every day</li>
+          <li>📧 Email threat scanning — 10 mailboxes</li>
+          <li>Faster support when you need help</li>
+          <li>Activity logs and access reports on demand</li>
+        </ul>
+        <button class="btn-primary" style="width:100%" onclick="window.location.href='/pages/login.html?signup=1&amp;plan=Growth'">Start Free Trial</button>
+      </div>
+
+      <div class="price-card">
+        <div class="price-tier">Pro</div>
+        <div class="price-amount">$179<span>/mo</span></div>
+        <div class="price-desc">For larger businesses that need the highest level of protection and personal service.</div>
+        <ul class="price-features">
+          <li>Massive storage for large businesses</li>
+          <li>Our highest level of protection</li>
+          <li>Up to 50 employees</li>
+          <li>Your files backed up continuously</li>
+          <li>📧 Email threat scanning — up to 50 mailboxes</li>
+          <li>Call us any time, day or night</li>
+          <li>Proactive security reviews to help spot weaknesses</li>
+          <li>Your own personal point of contact</li>
+        </ul>
+        <button class="btn-outline" style="width:100%" onclick="window.location.href='/pages/login.html?signup=1&amp;plan=Pro'">Start Free Trial</button>
+      </div>
+    </div>
+
+    <p style="text-align:center;font-family:'DM Sans',sans-serif;font-size:11px;color:#948a7d;margin-top:20px;letter-spacing:1px">More than 50 users or mailboxes? Build a custom plan tailored to your business below.</p>
+
+    <!-- Custom plan banner -->
+    <div style="margin-top:28px;background:linear-gradient(135deg,rgba(14,154,134,0.08),rgba(8,145,166,0.05));border:1px solid rgba(14,154,134,0.3);border-radius:14px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
+      <div style="flex:1;min-width:240px">
+        <div style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;color:#2b2723;margin-bottom:6px">Need something tailored? <span style="color:#14b39c">Build your own plan.</span></div>
+        <p style="font-size:14px;color:#8a8074;line-height:1.6;margin:0;max-width:560px">Bigger team, multiple locations, or specific compliance needs? We'll tailor storage, mailboxes, and support around your business — no rigid tiers, just what you actually need.</p>
+      </div>
+      <button class="btn-primary" style="white-space:nowrap" onclick="window.location.href='/pages/custom-plan.html'">Build Your Plan →</button>
+    </div>
+  </section>
+
+  <div class="divider" style="margin-top:60px"></div>
+
+  <section class="section" style="text-align:center;padding-top:60px;padding-bottom:80px">
+    <h2 class="section-title" style="margin-bottom:16px">Not sure which plan is right for you?</h2>
+    <p style="color:var(--muted);font-size:16px;max-width:480px;margin:0 auto 32px;line-height:1.7">No pressure. Give us a call or send a message and we'll walk you through the best fit for your business — for free.</p>
+    <button class="btn-primary" onclick="showPage('contact')">Talk to Us First</button>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">NEXUS<span>SEC</span></div>
+        <p class="footer-brand-desc">Enterprise-grade cybersecurity and cloud protection built for local businesses. Real people, local support, serious security.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('home')">Cloud Storage</button></li>
+          <li><button onclick="showPage('home')">Threat Monitoring</button></li>
+          <li><button onclick="showPage('home')">Access Control</button></li>
+          <li><button onclick="showPage('home')">Disaster Recovery</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-col-links">
+          <li><button onclick="window.location.href='/pages/about.html'">About Us</button></li>
+          <li><button onclick="window.location.href='/pages/security.html'">Security</button></li>
+          <li><button onclick="window.location.href='/pages/pricing.html'">Pricing</button></li>
+          <li><button onclick="window.location.href='/pages/case-studies.html'">How We Help</button></li>
+          <li><button onclick="window.location.href='/pages/resources.html'">Security Tips</button></li>
+          <li><button onclick="window.location.href='/pages/faq.html'">FAQ</button></li>
+          <li><button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button></li>
+          <li><button onclick="window.location.href='/pages/privacy.html'">Privacy Policy</button></li>
+          <li><button onclick="window.location.href='/pages/terms.html'">Terms of Service</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Reach Us</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('contact')">your@email.com</button></li>
+          <li><button onclick="showPage('contact')">(555) 000-0000</button></li>
+          <li><button onclick="showPage('contact')">Your City, Your State</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo">NEXUS<span>SEC</span></div>
+      <div class="footer-copy">© 2026 Nexus Security, LLC. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="../js/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

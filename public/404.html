@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Page Not Found — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+  .err-wrap {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; text-align: center; padding: 40px 24px;
+    position: relative; z-index: 1;
+  }
+  .err-code {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 120px; font-weight: 500;
+    color: #f5efe7; line-height: 1; margin-bottom: 4px;
+    user-select: none;
+  }
+  .err-label {
+    font-family: 'DM Sans', sans-serif; font-size: 10px;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: #0e9a86; margin-bottom: 16px;
+  }
+  .err-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 36px; font-weight: 700; color: #2b2723;
+    margin-bottom: 12px; line-height: 1.2;
+  }
+  .err-sub {
+    font-size: 15px; color: #8a8074; max-width: 400px;
+    line-height: 1.7; margin-bottom: 36px;
+  }
+  .err-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+</style>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+    <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+    <button onclick="window.location.href='/pages/login.html'" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+</nav>
+
+<div class="err-wrap">
+  <div class="err-code">404</div>
+  <div class="err-label">// Page Not Found</div>
+  <h1 class="err-title">This page doesn't exist.</h1>
+  <p class="err-sub">The link might be broken, the page may have moved, or you may have typed the address incorrectly.</p>
+  <div class="err-actions">
+    <button class="btn-primary" onclick="window.location.href='/'">Go Home</button>
+    <button class="btn-outline" onclick="window.location.href='/pages/contact.html'">Contact Us</button>
+  </div>
+</div>
+
+<script src="/js/script.js"></script>
+</body>
+</html>

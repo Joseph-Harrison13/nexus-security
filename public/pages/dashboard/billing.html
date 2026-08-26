@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Billing — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../css/styles.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<style>
+  .billing-plan-card {
+    background: #f5efe7;
+    border: 1px solid #e2d9ca;
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+  .billing-plan-card.active-plan { border-color: #0e9a86; }
+  .billing-plan-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .billing-plan-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #0e9a86;
+    margin-bottom: 8px;
+  }
+  .billing-plan-tier {
+    font-family: 'Poppins', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: #2b2723;
+    line-height: 1;
+  }
+  .billing-plan-desc {
+    font-size: 13px;
+    color: #8a8074;
+    margin-top: 6px;
+  }
+  .billing-plan-price {
+    font-family: 'Poppins', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: #2b2723;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .billing-plan-price span {
+    font-size: 14px;
+    color: #8a8074;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+  .billing-status-badge {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+  .billing-status-badge.active   { color: #22c55e; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+  .billing-status-badge.inactive { color: #948a7d;    background: rgba(255,255,255,0.05); border: 1px solid #e2d9ca; }
+  .billing-status-badge.free     { color: #c8a96e; background: rgba(200,169,110,0.08); border: 1px solid rgba(200,169,110,0.2); }
+
+  .plan-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 768px) { .plan-grid { grid-template-columns: 1fr; } }
+
+  .plan-option {
+    background: #f5efe7;
+    border: 1px solid #e2d9ca;
+    border-radius: 12px;
+    padding: 24px 20px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .plan-option:hover { border-color: #0e9a86; }
+  .plan-option.current-plan { border-color: #0e9a86; }
+  .plan-option-badge {
+    position: absolute;
+    top: -10px; left: 50%; transform: translateX(-50%);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: #0e9a86;
+    color: #2b2723;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .plan-option-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #948a7d;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .plan-option-price {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2b2723;
+    margin-bottom: 12px;
+  }
+  .plan-option-price span { font-size: 13px; color: #8a8074; font-family: 'DM Sans', sans-serif; font-weight: 300; }
+  .plan-option ul {
+    list-style: none;
+    padding: 0; margin: 0 0 20px 0;
+  }
+  .plan-option ul li {
+    font-size: 12px;
+    color: #948a7d;
+    padding: 4px 0;
+    border-bottom: 1px solid #f5efe7;
+  }
+  .plan-option ul li::before { content: '✓ '; color: #0e9a86; }
+  .plan-select-btn {
+    width: 100%;
+    padding: 11px;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+  }
+  .plan-select-btn.primary   { background: linear-gradient(135deg,#0e9a86,#1d4ed8); color:#2b2723; }
+  .plan-select-btn.secondary { background: transparent; border: 1px solid #e2d9ca; color: #948a7d; }
+  .plan-select-btn:disabled  { opacity: 0.4; cursor: default; }
+  .plan-select-btn:hover:not(:disabled) { opacity: 0.85; }
+
+  .billing-actions-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .billing-action-btn {
+    background: transparent;
+    border: 1px solid #e2d9ca;
+    border-radius: 8px;
+    padding: 10px 18px;
+    color: #948a7d;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .billing-action-btn:hover { border-color: #0e9a86; color: #0e9a86; }
+
+  #billingMsg {
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 20px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .billing-no-stripe {
+    background: rgba(200,169,110,0.06);
+    border: 1px solid rgba(200,169,110,0.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .billing-no-stripe p {
+    font-size: 13px;
+    color: #c8a96e;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .billing-no-stripe a { color: #0e9a86; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+    <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+    <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+</div>
+
+<div class="page active" id="page-dash-billing">
+  <div class="dash-layout">
+    <div class="dash-sidebar" id="sb-billing"></div>
+    <div class="dash-main">
+      <div id="dash-tabs"></div>
+      <div class="dash-header">
+        <div class="dash-greeting">Billing &amp; Plan</div>
+        <div class="dash-date" id="billingNextDate">Loading…</div>
+      </div>
+
+      <!-- Current plan summary -->
+      <div class="billing-plan-card active-plan" id="currentPlanCard">
+        <div class="billing-plan-row">
+          <div>
+            <div class="billing-plan-name">Current Plan</div>
+            <div class="billing-plan-tier" id="billingPlanTier">—</div>
+            <div class="billing-plan-desc" id="billingPlanDesc">Loading subscription details…</div>
+            <span class="billing-status-badge" id="billingStatusBadge">—</span>
+          </div>
+          <div style="text-align:right">
+            <div class="billing-plan-price" id="billingPlanPrice">—</div>
+            <div class="billing-actions-row" style="justify-content:flex-end">
+              <button class="billing-action-btn" id="manageBtn" onclick="openBillingPortal()" style="display:none">
+                Manage Billing →
+              </button>
+              <button class="billing-action-btn" onclick="window.location.href='/pages/contact.html'">
+                Contact Us
+              </button>
+            </div>
+          </div>
+        </div>
+        <p id="billingMsg"></p>
+      </div>
+
+      <!-- No-Stripe notice (shown only when Stripe isn't configured) -->
+      <div class="billing-no-stripe" id="noStripeNotice" style="display:none">
+        <p>Online payment processing is not yet configured. To upgrade your plan, <a href="/pages/contact.html">contact our team</a> and we'll get you set up.</p>
+      </div>
+
+      <!-- Plan selection grid -->
+      <div class="dash-section-head" style="margin-bottom:16px">
+        <div class="dash-section-title">Available Plans</div>
+      </div>
+
+      <div class="plan-grid" id="planGrid">
+        <!-- Starter -->
+        <div class="plan-option" id="planStarter">
+          <div class="plan-option-name">Starter</div>
+          <div class="plan-option-price">$55<span>/mo</span></div>
+          <ul>
+            <li>100 GB Secure Storage</li>
+            <li>Up to 3 Users</li>
+            <li>Weekly Backups</li>
+            <li>Email Support</li>
+            <li>Security Score</li>
+          </ul>
+          <button class="plan-select-btn primary" onclick="startCheckout('Starter')">Get Started →</button>
+        </div>
+        <!-- Growth -->
+        <div class="plan-option" id="planGrowth">
+          <div class="plan-option-badge">Most Popular</div>
+          <div class="plan-option-name">Growth</div>
+          <div class="plan-option-price">$99<span>/mo</span></div>
+          <ul>
+            <li>500 GB Secure Storage</li>
+            <li>Up to 10 Users</li>
+            <li>Daily Backups</li>
+            <li>Priority Support</li>
+            <li>Threat Monitoring</li>
+          </ul>
+          <button class="plan-select-btn primary" onclick="startCheckout('Growth')">Get Started →</button>
+        </div>
+        <!-- Pro -->
+        <div class="plan-option" id="planPro">
+          <div class="plan-option-name">Pro</div>
+          <div class="plan-option-price">$179<span>/mo</span></div>
+          <ul>
+            <li>2 TB Secure Storage</li>
+            <li>Up to 50 Users</li>
+            <li>Continuous Backups</li>
+            <li>Dedicated Advisor</li>
+            <li>Compliance Reports</li>
+          </ul>
+          <button class="plan-select-btn primary" onclick="startCheckout('Pro')">Get Started →</button>
+        </div>
+      </div>
+
+      <!-- Post-checkout notices -->
+      <div id="checkoutNotice" style="display:none;margin-bottom:20px"></div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="../../js/script.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => { initDashboard(); initBilling(); });</script>
+<script>
+async function initBilling() {
+  // Handle success/cancel from Stripe redirect
+  const params = new URLSearchParams(window.location.search);
+  const notice = document.getElementById('checkoutNotice');
+  if (params.get('success') === '1') {
+    notice.style.display = 'block';
+    notice.innerHTML = '<div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:16px 20px;color:#22c55e;font-size:13px;margin-bottom:8px">✓ Payment successful — your plan has been upgraded. It may take a moment to reflect.</div>';
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+  if (params.get('cancelled') === '1') {
+    notice.style.display = 'block';
+    notice.innerHTML = '<div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:16px 20px;color:#ef4444;font-size:13px;margin-bottom:8px">Payment cancelled — your plan was not changed.</div>';
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+
+  try {
+    // Auth rides on the httpOnly session cookie (same-origin) — no bearer needed.
+    const r = await fetch('/api/stripe/status', { credentials: 'include' });
+    const d = await r.json();
+
+    // Update current plan display
+    const tierEl   = document.getElementById('billingPlanTier');
+    const descEl   = document.getElementById('billingPlanDesc');
+    const priceEl  = document.getElementById('billingPlanPrice');
+    const badgeEl  = document.getElementById('billingStatusBadge');
+    const manageBtn = document.getElementById('manageBtn');
+    const dateEl   = document.getElementById('billingNextDate');
+
+    const PLAN_INFO = {
+      Free:    { price: '$0',    desc: '5 GB Storage · 1 User · Manual backups only' },
+      Starter: { price: '$55',  desc: '100 GB Storage · 3 Users · Weekly Backups · Email Scanning (3 mailboxes) · Email Support' },
+      Growth:  { price: '$99',  desc: '500 GB Storage · 10 Users · Daily Backups · Email Scanning (10 mailboxes) · Priority Support' },
+      Pro:     { price: '$179', desc: '2 TB Storage · Up to 50 Users · Continuous Backups · Email Scanning (50 mailboxes) · Dedicated Advisor' },
+    };
+
+    const plan = d.plan || 'Free';
+    const info = PLAN_INFO[plan] || PLAN_INFO.Free;
+
+    tierEl.textContent  = plan;
+    descEl.textContent  = info.desc;
+    priceEl.innerHTML   = `${info.price}<span>/mo</span>`;
+    dateEl.textContent  = d.subscriptionActive ? 'Active subscription' : 'Free tier';
+
+    if (d.subscriptionActive) {
+      badgeEl.textContent  = 'Active';
+      badgeEl.className    = 'billing-status-badge active';
+    } else if (plan === 'Free') {
+      badgeEl.textContent  = 'Free Tier';
+      badgeEl.className    = 'billing-status-badge free';
+    } else {
+      badgeEl.textContent  = 'Inactive';
+      badgeEl.className    = 'billing-status-badge inactive';
+    }
+
+    // Show manage button only if they have an active subscription
+    if (d.subscriptionActive && d.customerId) {
+      manageBtn.style.display = 'inline-block';
+    }
+
+    // Stripe not configured
+    if (!d.hasStripe) {
+      document.getElementById('noStripeNotice').style.display = 'block';
+      // Disable all upgrade buttons
+      document.querySelectorAll('.plan-select-btn').forEach(b => b.disabled = true);
+    }
+
+    // Mark current plan
+    const planMap = { Starter: 'planStarter', Growth: 'planGrowth', Pro: 'planPro' };
+    if (planMap[plan]) {
+      const el = document.getElementById(planMap[plan]);
+      el.classList.add('current-plan');
+      const btn = el.querySelector('.plan-select-btn');
+      btn.textContent = 'Current Plan';
+      btn.disabled    = true;
+      btn.className   = 'plan-select-btn secondary';
+    }
+  } catch (e) {
+    console.warn('[billing] Could not load status:', e.message);
+  }
+}
+
+async function startCheckout(plan) {
+  const msgEl = document.getElementById('billingMsg');
+  msgEl.style.color = '#948a7d';
+  msgEl.textContent = 'Creating checkout session…';
+
+  try {
+    const r = await fetch('/api/stripe/checkout', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan }),
+    });
+    const d = await r.json();
+
+    if (d.url) {
+      window.location.href = d.url;
+    } else {
+      msgEl.style.color = '#ef4444';
+      msgEl.textContent = d.error || 'Could not start checkout. Please try again.';
+    }
+  } catch {
+    msgEl.style.color = '#ef4444';
+    msgEl.textContent = 'Network error — please try again.';
+  }
+}
+
+async function openBillingPortal() {
+  const manageBtn = document.getElementById('manageBtn');
+  const orig = manageBtn.textContent;
+  manageBtn.textContent = 'Opening portal…';
+  manageBtn.disabled = true;
+
+  try {
+    const r = await fetch('/api/stripe/portal', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const d = await r.json();
+    if (d.url) {
+      window.location.href = d.url;
+    } else {
+      showToast(d.error || 'Could not open billing portal.');
+      manageBtn.textContent = orig;
+      manageBtn.disabled = false;
+    }
+  } catch {
+    showToast('Network error — please try again.');
+    manageBtn.textContent = orig;
+    manageBtn.disabled = false;
+  }
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

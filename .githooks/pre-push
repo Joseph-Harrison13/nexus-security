@@ -1,0 +1,26 @@
+#!/bin/sh
+# Run the same gates CI runs, before anything reaches the remote.
+#
+# CI runs lint, tests and an audit on every push. Failing here costs half a
+# minute; failing on GitHub costs a red X on a public repo and a second commit
+# that says "fix lint".
+#
+# Enabled by `npm run setup`. Need to bypass it? `git push --no-verify`.
+
+set -e
+
+printf '\n  pre-push: lint...\n'
+if ! npm run lint --silent; then
+  printf '\n  PUSH BLOCKED — lint failed.\n\n'
+  exit 1
+fi
+
+printf '  pre-push: tests...\n\n'
+if ! npm test --silent; then
+  printf '\n  PUSH BLOCKED — tests are failing.\n'
+  printf '  Fix them, or push anyway with: git push --no-verify\n\n'
+  exit 1
+fi
+
+printf '\n  pre-push: all green, pushing.\n\n'
+exit 0

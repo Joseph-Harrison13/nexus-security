@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Panel — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../css/styles.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+    <button onclick="window.location.href='/pages/dashboard/overview.html'" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Dashboard</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/dashboard/overview.html'">Dashboard</button>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:90px 24px 80px;position:relative;z-index:1">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:32px">
+    <div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#0e9a86;margin-bottom:6px">// Admin Only</div>
+      <h1 style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:700;color:#2b2723">Admin Panel</h1>
+    </div>
+    <button class="btn-outline" onclick="window.location.href='/pages/dashboard/overview.html'" style="font-size:12px;padding:10px 20px;cursor:pointer">← Back to Dashboard</button>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="admin-stats-bar" id="adminStats">
+    <div class="admin-stat-card"><div class="admin-stat-label">Total Users</div><div class="admin-stat-val" id="aStat-users">—</div></div>
+    <div class="admin-stat-card"><div class="admin-stat-label">Total Files</div><div class="admin-stat-val" id="aStat-files">—</div></div>
+    <div class="admin-stat-card"><div class="admin-stat-label">New Leads</div><div class="admin-stat-val" id="aStat-leads">—</div></div>
+    <div class="admin-stat-card"><div class="admin-stat-label">Activity Logs</div><div class="admin-stat-val" id="aStat-activity">—</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="showAdminTab('users', this)">Users</button>
+    <button class="admin-tab" onclick="showAdminTab('leads', this)">Leads &amp; Contacts</button>
+    <button class="admin-tab" onclick="showAdminTab('activity', this)">Activity Log</button>
+    <button class="admin-tab" onclick="showAdminTab('tools', this)">Tools</button>
+  </div>
+
+  <!-- Users panel -->
+  <div class="admin-panel active" id="panel-users">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <input class="admin-search" id="userSearch" placeholder="Search users…" oninput="filterUsers(this.value)">
+      <button class="btn-primary" onclick="showCreateUser()" style="font-size:12px;padding:10px 20px;cursor:pointer">+ Add User</button>
+    </div>
+
+    <!-- Create user form (hidden by default) -->
+    <div id="createUserForm" style="display:none;background:#f5efe7;border:1px solid #ebe3d7;border-radius:12px;padding:24px;margin-bottom:20px">
+      <h3 style="font-size:16px;color:#4a443d;margin-bottom:18px">Create New User</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div>
+          <label style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#948a7d;display:block;margin-bottom:6px">Name</label>
+          <input id="cu-name" type="text" placeholder="Full name" style="width:100%;background:#faf6f0;border:1px solid #ebe3d7;border-radius:8px;padding:10px 14px;font-size:13px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none">
+        </div>
+        <div>
+          <label style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#948a7d;display:block;margin-bottom:6px">Email</label>
+          <input id="cu-email" type="email" placeholder="user@example.com" style="width:100%;background:#faf6f0;border:1px solid #ebe3d7;border-radius:8px;padding:10px 14px;font-size:13px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none">
+        </div>
+        <div>
+          <label style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#948a7d;display:block;margin-bottom:6px">Password</label>
+          <input id="cu-password" type="password" placeholder="Min 8 chars, mixed case + number + symbol" style="width:100%;background:#faf6f0;border:1px solid #ebe3d7;border-radius:8px;padding:10px 14px;font-size:13px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none">
+        </div>
+        <div>
+          <label style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#948a7d;display:block;margin-bottom:6px">Role</label>
+          <select id="cu-role" style="width:100%;background:#faf6f0;border:1px solid #ebe3d7;border-radius:8px;padding:10px 14px;font-size:13px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#948a7d;display:block;margin-bottom:6px">Plan</label>
+          <select id="cu-plan" style="width:100%;background:#faf6f0;border:1px solid #ebe3d7;border-radius:8px;padding:10px 14px;font-size:13px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none">
+            <option value="Starter">Starter</option>
+            <option value="Growth">Growth</option>
+            <option value="Pro">Pro</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-primary" onclick="submitCreateUser()" style="font-size:12px;padding:10px 24px;cursor:pointer">Create User</button>
+        <button class="btn-outline" onclick="document.getElementById('createUserForm').style.display='none'" style="font-size:12px;padding:10px 20px;cursor:pointer">Cancel</button>
+      </div>
+      <div id="cu-error" style="margin-top:10px;font-size:13px;color:#ef4444;display:none"></div>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table class="admin-table" id="usersTable">
+        <thead>
+          <tr>
+            <th>Name / Email</th>
+            <th>Role</th>
+            <th>Plan</th>
+            <th>Last Login</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody">
+          <tr><td colspan="6" style="text-align:center;padding:32px;color:#948a7d">Loading users…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Leads panel -->
+  <div class="admin-panel" id="panel-leads">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <input class="admin-search" id="leadSearch" placeholder="Search leads…" oninput="filterLeads(this.value)">
+      <span id="leadCount" style="font-family:'DM Sans',sans-serif;font-size:11px;color:#948a7d;letter-spacing:1px"></span>
+    </div>
+    <div id="leadsBody">
+      <div style="text-align:center;padding:48px;color:#948a7d;font-size:14px">Loading leads…</div>
+    </div>
+  </div>
+
+  <!-- Tools panel -->
+  <div class="admin-panel" id="panel-tools">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+      <!-- Test email card -->
+      <div style="background:#f5efe7;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+        <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a8074;margin-bottom:8px">Email / SMTP</div>
+        <div style="font-size:14px;color:#33302b;font-weight:500;margin-bottom:6px">Send Test Email</div>
+        <p style="font-size:12px;color:#8a8074;line-height:1.5;margin-bottom:16px">Verify your SMTP configuration by sending a test message to the configured EMAIL_TO address.</p>
+        <button id="testEmailBtn" onclick="sendTestEmail()" style="background:transparent;border:1px solid #ebe3d7;border-radius:8px;padding:9px 18px;color:#33302b;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#0e9a86';this.style.color='#0e9a86'" onmouseout="this.style.borderColor='#ebe3d7';this.style.color='#33302b'">Send Test Email</button>
+        <div id="testEmailResult" style="margin-top:10px;font-size:12px;min-height:18px"></div>
+      </div>
+      <!-- Require 2FA card -->
+      <div style="background:#f5efe7;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+        <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a8074;margin-bottom:8px">Account Security</div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+          <div style="flex:1">
+            <div style="font-size:14px;color:#33302b;font-weight:500;margin-bottom:6px">Require 2FA for Everyone</div>
+            <p style="font-size:12px;color:#8a8074;line-height:1.5;margin:0">Force two-factor authentication on for all team members. When on, no one can turn off their 2FA.</p>
+            <div id="require2faMsg" style="font-size:12px;color:#14b39c;margin-top:8px;min-height:14px"></div>
+          </div>
+          <button id="require2faToggle" onclick="toggleRequire2fa()" role="switch" aria-checked="false"
+            style="flex-shrink:0;position:relative;width:48px;height:26px;border-radius:13px;border:none;cursor:pointer;background:#e2d9ca;transition:background 0.2s;margin-top:2px">
+            <span id="require2faKnob" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#2b2723;transition:left 0.2s"></span>
+          </button>
+        </div>
+      </div>
+      <!-- Incident Response -->
+      <div style="background:#ffffff;border:1px solid #f0d5d5;border-radius:12px;padding:24px;grid-column:1/-1">
+        <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c0392b;margin-bottom:14px">⚠ Incident Response</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px">
+          <div id="maintenanceControl">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+              <div style="font-size:14px;color:#33302b;font-weight:600">Maintenance Mode</div>
+              <button id="maintToggle" onclick="toggleMaintenance()" role="switch" aria-checked="false"
+                style="flex-shrink:0;position:relative;width:48px;height:26px;border-radius:13px;border:none;cursor:pointer;background:#e2d9ca;transition:background 0.2s">
+                <span id="maintKnob" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#ffffff;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></span>
+              </button>
+            </div>
+            <p style="font-size:12px;color:#8a8074;line-height:1.5;margin:6px 0 0">Wall the app off for everyone but admins. <span id="maintState" style="color:#14b39c">Site is live.</span></p>
+          </div>
+          <div>
+            <div style="font-size:14px;color:#33302b;font-weight:600;margin-bottom:6px">Sign Out Everyone</div>
+            <p style="font-size:12px;color:#8a8074;line-height:1.5;margin:0 0 12px">Revoke all sessions — everyone re-logs in with 2FA.</p>
+            <button onclick="panicRevokeAll()" style="background:#fff;border:1px solid #ef4444;border-radius:8px;padding:9px 16px;color:#ef4444;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:1px;cursor:pointer">REVOKE ALL SESSIONS</button>
+          </div>
+          <div>
+            <div style="font-size:14px;color:#33302b;font-weight:600;margin-bottom:6px">Reset All Passwords</div>
+            <p style="font-size:12px;color:#8a8074;line-height:1.5;margin:0 0 12px">Force every user (except you) to set a new password.</p>
+            <button onclick="forceResetAll()" style="background:#fff;border:1px solid #ef4444;border-radius:8px;padding:9px 16px;color:#ef4444;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:1px;cursor:pointer">FORCE RESET ALL</button>
+          </div>
+        </div>
+      </div>
+      <!-- Account limit overrides -->
+      <div style="background:#f5efe7;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+        <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a8074;margin-bottom:8px">Account Limits</div>
+        <div style="font-size:14px;color:#33302b;font-weight:500;margin-bottom:6px">Custom Overrides</div>
+        <p style="font-size:12px;color:#8a8074;line-height:1.5;margin-bottom:14px">Override the plan defaults for this account. Leave blank to use the plan's standard limit.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:#6b6258">Seats (users)
+            <input type="number" id="ovrSeats" min="1" placeholder="—" style="width:90px;background:#ffffff;border:1px solid #e2d9ca;border-radius:6px;padding:7px 10px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:13px;outline:none"/></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:#6b6258">Storage (GB)
+            <input type="number" id="ovrStorage" min="1" placeholder="—" style="width:90px;background:#ffffff;border:1px solid #e2d9ca;border-radius:6px;padding:7px 10px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:13px;outline:none"/></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:#6b6258">Mailboxes
+            <input type="number" id="ovrMailboxes" min="1" placeholder="—" style="width:90px;background:#ffffff;border:1px solid #e2d9ca;border-radius:6px;padding:7px 10px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:13px;outline:none"/></label>
+        </div>
+        <button onclick="saveAccountLimits()" style="margin-top:14px;background:transparent;border:1px solid #ebe3d7;border-radius:8px;padding:9px 18px;color:#14b39c;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer">Save Limits</button>
+        <div id="ovrMsg" style="margin-top:10px;font-size:12px;min-height:16px"></div>
+      </div>
+      <!-- Bulk user import -->
+      <div style="background:#f5efe7;border:1px solid #ebe3d7;border-radius:12px;padding:24px;grid-column:1/-1">
+        <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a8074;margin-bottom:8px">Team Onboarding</div>
+        <div style="font-size:14px;color:#33302b;font-weight:500;margin-bottom:6px">Bulk Import Users</div>
+        <p style="font-size:12px;color:#8a8074;line-height:1.5;margin-bottom:14px">Paste a CSV (or upload a .csv file) with columns <code style="color:#14b39c">name,email,role,plan</code>. Each user gets an emailed invite link to set their own password. Role and plan are optional.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+          <input type="file" id="csvFile" accept=".csv,text/csv" onchange="loadCsvFile(this)" style="font-size:12px;color:#8a8074"/>
+        </div>
+        <textarea id="csvText" rows="5" placeholder="name,email,role,plan&#10;Jane Doe,jane@acme.com,User,Pro&#10;Sam Lee,sam@acme.com" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:12px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;resize:vertical"></textarea>
+        <button onclick="importUsers()" id="importBtn" style="margin-top:12px;background:linear-gradient(135deg,#0e9a86,#0891a6);border:none;border-radius:8px;padding:10px 22px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;font-weight:600">Import Users</button>
+        <div id="importResult" style="margin-top:14px;font-size:13px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Log panel -->
+  <div class="admin-panel" id="panel-activity">
+    <div style="overflow-x:auto">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>User</th>
+            <th>Action</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody id="activityBody">
+          <tr><td colspan="4" style="text-align:center;padding:32px;color:#948a7d">Loading activity…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <button id="loadMoreActivity" onclick="loadMoreActivity()" style="display:none;margin:16px auto;display:block;background:none;border:1px solid #ebe3d7;color:#8a8074;padding:10px 28px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s">Load More</button>
+  </div>
+</div>
+
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<!-- Confirm delete modal -->
+<div id="confirmModal" style="display:none;position:fixed;inset:0;background:rgba(60,50,35,0.12);backdrop-filter:blur(4px);z-index:9970;align-items:center;justify-content:center;padding:24px">
+  <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:16px;padding:36px;max-width:400px;width:100%">
+    <h3 style="font-size:20px;color:#2b2723;margin-bottom:10px">Delete User?</h3>
+    <p id="confirmMsg" style="font-size:14px;color:#8a8074;margin-bottom:28px;line-height:1.6"></p>
+    <div style="display:flex;gap:12px">
+      <button id="confirmYes" style="background:#cc4444;color:#2b2723;border:none;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;flex:1">Delete</button>
+      <button onclick="document.getElementById('confirmModal').style.display='none'" style="background:none;border:1px solid #ebe3d7;color:#948a7d;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;flex:1">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let _allUsers = [];
+let _allLeads = [];
+let _activityOffset = 0;
+
+function showAdminTab(name, btn) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+function showCreateUser() {
+  const f = document.getElementById('createUserForm');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+async function submitCreateUser() {
+  const errEl = document.getElementById('cu-error');
+  errEl.style.display = 'none';
+  const name     = document.getElementById('cu-name').value.trim();
+  const email    = document.getElementById('cu-email').value.trim();
+  const password = document.getElementById('cu-password').value;
+  const role     = document.getElementById('cu-role').value;
+  const plan     = document.getElementById('cu-plan').value;
+  if (!name || !email || !password) { errEl.textContent = 'Name, email, and password are required.'; errEl.style.display = 'block'; return; }
+  const result = await api('POST', '/users', { name, email, password, role, plan });
+  if (!result) { errEl.textContent = 'Failed to create user. Check password requirements.'; errEl.style.display = 'block'; return; }
+  document.getElementById('createUserForm').style.display = 'none';
+  ['cu-name','cu-email','cu-password'].forEach(id => document.getElementById(id).value = '');
+  showToast('User created: ' + email);
+  loadUsers();
+}
+
+function filterUsers(q) {
+  const rows = document.querySelectorAll('#usersBody tr[data-id]');
+  const lq = q.toLowerCase();
+  rows.forEach(r => {
+    r.style.display = r.dataset.search.includes(lq) ? '' : 'none';
+  });
+}
+
+function filterLeads(q) {
+  document.querySelectorAll('.lead-card').forEach(c => {
+    c.style.display = c.dataset.search.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+async function loadUsers() {
+  const tbody = document.getElementById('usersBody');
+  const data  = await api('GET', '/users?limit=100');
+  if (!data) return;
+  _allUsers = Array.isArray(data) ? data : (data.data || []);
+  document.getElementById('aStat-users').textContent = _allUsers.length;
+
+  tbody.innerHTML = _allUsers.map(u => `
+    <tr data-id="${u.id}" data-search="${(u.email+u.name+u.role+u.plan).toLowerCase()}">
+      <td>
+        <div style="font-size:14px;color:#33302b;font-weight:500">${escHtml(u.name || '—')}${u.suspended ? ' <span style="font-family:\'DM Sans\',sans-serif;font-size:9px;letter-spacing:1px;color:#ef4444;border:1px solid #ef4444;border-radius:4px;padding:1px 5px;vertical-align:middle">SUSPENDED</span>' : ''}</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:#8a8074;margin-top:2px">${escHtml(u.email)}</div>
+      </td>
+      <td><span class="admin-badge badge-${u.role.toLowerCase()}">${u.role}</span></td>
+      <td><span class="admin-badge badge-${u.plan.toLowerCase()}">${u.plan}</span></td>
+      <td style="font-family:'DM Sans',sans-serif;font-size:11px;color:#8a8074">${u.last_login ? timeAgo(u.last_login) : 'Never'}</td>
+      <td style="font-family:'DM Sans',sans-serif;font-size:11px;color:#8a8074">${formatDate(u.created_at).split(',')[0]}</td>
+      <td>
+        <button class="admin-action-btn" onclick="editUser(${u.id}, '${escHtml(u.name)}', '${escHtml(u.email)}', '${u.role}', '${u.plan}')">Edit</button>
+        ${u.suspended
+          ? `<button class="admin-action-btn" onclick="setSuspend(${u.id}, false, '${escHtml(u.email)}')">Unsuspend</button>`
+          : `<button class="admin-action-btn" onclick="setSuspend(${u.id}, true, '${escHtml(u.email)}')">Suspend</button>`}
+        <button class="admin-action-btn" onclick="forceReset(${u.id}, '${escHtml(u.email)}')">Reset PW</button>
+        <button class="admin-action-btn danger" onclick="confirmDeleteUser(${u.id}, '${escHtml(u.email)}')">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function loadLeads() {
+  const body = document.getElementById('leadsBody');
+  const data = await api('GET', '/contact');
+  if (!data) return;
+  _allLeads = Array.isArray(data) ? data : [];
+  const newLeads = _allLeads.filter(l => !l.read_at).length;
+  document.getElementById('aStat-leads').textContent = newLeads;
+  document.getElementById('leadCount').textContent = `${_allLeads.length} total · ${newLeads} new`;
+
+  if (!_allLeads.length) {
+    body.innerHTML = '<div style="text-align:center;padding:48px;color:#948a7d;font-size:14px">No contact submissions yet.</div>';
+    return;
+  }
+  body.innerHTML = _allLeads.map(l => `
+    <div class="lead-card" data-search="${escHtml((l.email+' '+(l.first_name||'')+' '+(l.last_name||'')+' '+(l.business_name||'')+' '+l.message).toLowerCase())}">
+      <div class="lead-card-header">
+        <div>
+          <div class="lead-name">${escHtml((l.first_name||'') + ' ' + (l.last_name||''))}</div>
+          <div class="lead-email">${escHtml(l.email)}</div>
+          ${l.business_name ? `<div style="font-size:12px;color:#8a8074;margin-top:2px">${escHtml(l.business_name)}</div>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          ${l.interested_in ? `<span class="admin-badge badge-new">${escHtml(l.interested_in)}</span>` : ''}
+          ${!l.read_at ? '<span class="admin-badge badge-new">New</span>' : '<span class="admin-badge badge-read">Read</span>'}
+          <div class="lead-time">${timeAgo(l.submitted_at)}</div>
+        </div>
+      </div>
+      <p class="lead-message">${escHtml(l.message)}</p>
+    </div>`).join('');
+}
+
+async function loadActivity() {
+  _activityOffset = 0;
+  const rows = await api('GET', '/dashboard/activity?limit=50&offset=0');
+  if (!rows) return;
+  const arr = Array.isArray(rows) ? rows : [];
+  document.getElementById('aStat-activity').textContent = arr.length + (arr.length === 50 ? '+' : '');
+  renderActivityRows(arr, false);
+  _activityOffset = arr.length;
+  document.getElementById('loadMoreActivity').style.display = arr.length === 50 ? 'block' : 'none';
+}
+
+async function loadMoreActivity() {
+  const rows = await api('GET', `/dashboard/activity?limit=50&offset=${_activityOffset}`);
+  if (!rows) return;
+  const arr = Array.isArray(rows) ? rows : [];
+  renderActivityRows(arr, true);
+  _activityOffset += arr.length;
+  if (arr.length < 50) document.getElementById('loadMoreActivity').style.display = 'none';
+}
+
+function renderActivityRows(rows, append) {
+  const tbody = document.getElementById('activityBody');
+  const html = rows.map(r => `
+    <tr>
+      <td style="font-family:'DM Sans',sans-serif;font-size:11px;color:#8a8074;white-space:nowrap">${formatDate(r.created_at)}</td>
+      <td style="font-size:12px;color:#8a8074">${escHtml(r.user_email || 'system')}</td>
+      <td><span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#0e9a86">${escHtml(r.action)}</span></td>
+      <td style="font-size:13px;color:#8a8074">${escHtml(r.detail || '')}</td>
+    </tr>`).join('');
+  if (append) tbody.innerHTML += html;
+  else tbody.innerHTML = html || '<tr><td colspan="4" style="text-align:center;padding:32px;color:#948a7d">No activity yet.</td></tr>';
+}
+
+function confirmDeleteUser(id, email) {
+  const modal = document.getElementById('confirmModal');
+  document.getElementById('confirmMsg').textContent = `Are you sure you want to permanently delete ${email}? This cannot be undone.`;
+  modal.style.display = 'flex';
+  document.getElementById('confirmYes').onclick = async () => {
+    modal.style.display = 'none';
+    const r = await api('DELETE', '/users/' + id);
+    if (r !== null) { showToast('User deleted: ' + email); loadUsers(); }
+  };
+}
+
+function editUser(id, name, email, role, plan) {
+  // Inline edit — prompt for new values
+  const newName = prompt('Name:', name);
+  if (newName === null) return;
+  const newRole = prompt('Role (Admin / User):', role);
+  if (newRole === null) return;
+  const newPlan = prompt('Plan (Starter / Growth / Pro):', plan);
+  if (newPlan === null) return;
+  const updates = {};
+  if (newName !== name) updates.name = newName;
+  if (newRole !== role) updates.role = newRole;
+  if (newPlan !== plan) updates.plan = newPlan;
+  if (!Object.keys(updates).length) return;
+  api('PUT', '/users/' + id, updates).then(r => {
+    if (r) { showToast('User updated'); loadUsers(); }
+  });
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function timeAgo(d) {
+  const diff = Date.now() - new Date(d).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 2)  return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)  return hrs + 'h ago';
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return days + 'd ago';
+  return new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+}
+
+async function sendTestEmail() {
+  const btn    = document.getElementById('testEmailBtn');
+  const result = document.getElementById('testEmailResult');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  result.style.color = '#8a8074';
+  result.textContent = '';
+  try {
+    const r = await api('POST', '/dashboard/test-email');
+    if (r && r.message) {
+      result.style.color = '#22c55e';
+      result.textContent = '✓ ' + r.message;
+    } else {
+      result.style.color = '#ef4444';
+      result.textContent = 'Failed — check server logs.';
+    }
+  } catch (e) {
+    result.style.color = '#ef4444';
+    result.textContent = e.message || 'Network error.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send Test Email';
+  }
+}
+
+let _require2faOn = false;
+function paintRequire2fa(on) {
+  _require2faOn = !!on;
+  const t = document.getElementById('require2faToggle');
+  const k = document.getElementById('require2faKnob');
+  if (!t || !k) return;
+  t.style.background = on ? '#0e9a86' : '#e2d9ca';
+  t.setAttribute('aria-checked', on ? 'true' : 'false');
+  k.style.left = on ? '25px' : '3px';
+}
+async function loadRequire2fa() {
+  try { const r = await api('GET', '/dashboard/org-settings'); paintRequire2fa(r?.require2fa); } catch { /* ignore */ }
+}
+async function toggleRequire2fa() {
+  const next = !_require2faOn;
+  const msg = document.getElementById('require2faMsg');
+  if (next && !confirm('Require two-factor authentication for ALL team members? They won\'t be able to turn it off.')) return;
+  paintRequire2fa(next);
+  try {
+    const r = await api('POST', '/dashboard/require-2fa', { enabled: next });
+    if (msg) { msg.style.color = '#14b39c'; msg.textContent = r.message || ''; setTimeout(() => { if (msg) msg.textContent = ''; }, 4000); }
+  } catch (e) {
+    paintRequire2fa(!next);
+    if (msg) { msg.style.color = '#ef4444'; msg.textContent = e.message || 'Could not update setting.'; }
+  }
+}
+
+// ── Account limit overrides ──
+async function loadAccountLimits() {
+  try {
+    const s = await api('GET', '/dashboard/org-settings');
+    if (!s) return;
+    const d = s.planDefaults || {};
+    const seats = document.getElementById('ovrSeats');
+    const stor  = document.getElementById('ovrStorage');
+    const mb    = document.getElementById('ovrMailboxes');
+    if (seats) { seats.value = s.seatOverride || ''; seats.placeholder = `plan: ${d.seats ?? '—'}`; }
+    if (stor)  { stor.value  = s.storageOverrideGb || ''; stor.placeholder = `plan: ${d.storageGb ?? '—'}`; }
+    if (mb)    { mb.value    = s.mailboxOverride || ''; mb.placeholder = `plan: ${d.mailboxes ?? '—'}`; }
+  } catch { /* ignore */ }
+}
+async function saveAccountLimits() {
+  const msg = document.getElementById('ovrMsg');
+  const body = {
+    seatOverride:      document.getElementById('ovrSeats').value,
+    storageOverrideGb: document.getElementById('ovrStorage').value,
+    mailboxOverride:   document.getElementById('ovrMailboxes').value,
+  };
+  try {
+    const r = await api('POST', '/dashboard/account-limits', body);
+    if (msg) { msg.style.color = '#14b39c'; msg.textContent = r.message || 'Saved.'; setTimeout(() => { if (msg) msg.textContent = ''; }, 3500); }
+    loadAccountLimits();
+  } catch (e) {
+    if (msg) { msg.style.color = '#ef4444'; msg.textContent = e.message || 'Could not save.'; }
+  }
+}
+
+// ── Bulk user import ──
+function loadCsvFile(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { document.getElementById('csvText').value = reader.result; };
+  reader.readAsText(file);
+}
+async function importUsers() {
+  const csv = document.getElementById('csvText').value.trim();
+  const out = document.getElementById('importResult');
+  const btn = document.getElementById('importBtn');
+  if (!csv) { out.style.color = '#ef4444'; out.textContent = 'Paste some CSV rows first.'; return; }
+  btn.disabled = true; btn.textContent = 'Importing…';
+  try {
+    const r = await api('POST', '/users/import', { csv });
+    let html = `<div style="color:#14b39c;margin-bottom:8px">✓ ${r.createdCount} created · ${r.skippedCount} skipped · ${r.errorCount} errors</div>`;
+    if (r.created.length && r.invitesEmailed) {
+      html += `<div style="font-size:12px;color:#8a8074;margin-bottom:8px">📧 Invite emails sent — each user gets a link to set their own password (valid 7 days). Nothing else to do.</div>`;
+    } else if (r.created.length) {
+      // Email isn't configured, so the links are returned for manual sharing.
+      html += '<div style="background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:12px;margin-bottom:8px;max-height:220px;overflow:auto">'
+        + '<div style="font-size:11px;color:#fbbf24;margin-bottom:8px">⚠ Email isn\'t configured, so invites weren\'t sent. Share each invite link directly (valid 7 days):</div>'
+        + r.created.map(u => `<div style="margin-bottom:8px"><div style="font-size:12px;color:#6b6258">${escapeHtml(u.email)}</div><div style="font-family:'DM Sans',sans-serif;font-size:10px;color:#14b39c;word-break:break-all">${escapeHtml(u.inviteLink || '')}</div></div>`).join('')
+        + '</div>';
+    }
+    const issues = [...r.skipped, ...r.errors];
+    if (issues.length) {
+      html += '<div style="font-size:12px;color:#fbbf24">' + issues.map(i => `${escapeHtml(i.email)} — ${escapeHtml(i.reason)}`).join('<br>') + '</div>';
+    }
+    out.innerHTML = html;
+    loadUsers();
+  } catch (e) {
+    out.style.color = '#ef4444'; out.textContent = e.message || 'Import failed.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Import Users';
+  }
+}
+
+// ── Per-user incident controls ──────────────────────────────
+async function setSuspend(id, suspend, email) {
+  const msg = suspend
+    ? `Suspend ${email}? They'll be signed out immediately and blocked from logging in (account and data are kept).`
+    : `Reinstate ${email}? They'll be able to log in again.`;
+  if (!confirm(msg)) return;
+  const r = await api('POST', `/users/${id}/${suspend ? 'suspend' : 'unsuspend'}`);
+  if (r) { showToast(r.message || 'Done'); loadUsers(); }
+}
+async function forceReset(id, email) {
+  if (!confirm(`Force ${email} to reset their password? They'll be signed out and must set a new password before signing in.`)) return;
+  const r = await api('POST', `/users/${id}/force-password-reset`);
+  if (r) showToast(r.message || 'Password reset required');
+}
+
+// ── Global incident-response tools ──────────────────────────
+async function refreshMaintenance() {
+  try { const r = await api('GET', '/users/maintenance'); updateMaintenanceUI(!!r?.enabled); } catch { /* ignore */ }
+}
+function updateMaintenanceUI(on) {
+  const btn = document.getElementById('maintToggle');
+  if (!btn) return;
+  btn.setAttribute('aria-checked', on ? 'true' : 'false');
+  btn.style.background = on ? '#ef4444' : '#e2d9ca';
+  document.getElementById('maintKnob').style.left = on ? '25px' : '3px';
+  const st = document.getElementById('maintState');
+  if (st) { st.textContent = on ? 'Site is OFFLINE for non-admins.' : 'Site is live.'; st.style.color = on ? '#ef4444' : '#14b39c'; }
+}
+async function toggleMaintenance() {
+  const on = document.getElementById('maintToggle').getAttribute('aria-checked') === 'true';
+  const next = !on;
+  if (next && !confirm('Take the site OFFLINE for all non-admins? You keep access. Use this during a security incident.')) return;
+  const r = await api('POST', '/users/maintenance', { enabled: next });
+  if (r) { updateMaintenanceUI(r.enabled); showToast(r.message); }
+}
+async function panicRevokeAll() {
+  if (!confirm('PANIC BUTTON: sign out EVERY user (including you) right now? Everyone must log in again with 2FA. Use this if sessions may be compromised.')) return;
+  const r = await api('POST', '/users/revoke-all-sessions');
+  if (r) showToast(r.message || 'All sessions revoked');
+}
+async function forceResetAll() {
+  if (!confirm('Force EVERY user (except you) to set a new password? Use this if passwords may be compromised.')) return;
+  const r = await api('POST', '/users/force-password-reset-all');
+  if (r) showToast(r.message);
+}
+
+async function initAdmin() {
+  if (!getToken()) { window.location.href = '/pages/login.html'; return; }
+  const user = getStoredUser();
+  if (user?.role !== 'Admin' && user?.role !== 'SuperAdmin') {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Outfit,sans-serif;color:#8a8074;font-size:16px">Access denied — Admin only.</div>';
+    return;
+  }
+  // Maintenance mode is a platform-wide switch — only the SuperAdmin sees it.
+  const maint = document.getElementById('maintenanceControl');
+  const tasks = [loadUsers(), loadLeads(), loadActivity(), loadRequire2fa(), loadAccountLimits()];
+  if (user?.role === 'SuperAdmin') { tasks.push(refreshMaintenance()); }
+  else if (maint) { maint.style.display = 'none'; }
+  await Promise.all(tasks);
+}
+
+document.addEventListener('DOMContentLoaded', initAdmin);
+</script>
+<script src="../../js/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

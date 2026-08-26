@@ -1,0 +1,50 @@
+{
+  "name": "Nexus Security",
+  "short_name": "NexusSec",
+  "description": "Enterprise cybersecurity for small businesses — monitoring, compliance, and rapid response.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0a",
+  "theme_color": "#3B82F6",
+  "lang": "en-US",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Nexus Security Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "/pages/dashboard/overview.html",
+      "description": "View your security dashboard"
+    },
+    {
+      "name": "Upload Files",
+      "short_name": "Files",
+      "url": "/pages/dashboard/files.html",
+      "description": "Manage protected files"
+    }
+  ],
+  "categories": ["security", "business", "productivity"]
+}

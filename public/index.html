@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexus Security — Cloud Protection for Local Businesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<meta name="description" content="Nexus Security provides enterprise-grade cybersecurity, email threat scanning, and encrypted cloud storage for small businesses — starting at $55/mo. Real people, local support, serious security.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nexus Security — Cloud Protection for Local Businesses">
+<meta property="og:description" content="Enterprise-grade cybersecurity, email threat scanning, and encrypted cloud storage for small businesses. Threat monitoring, secure file storage, and email scanning starting at $55/mo.">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nexus Security — Cloud Protection for Local Businesses">
+<meta name="twitter:description" content="Enterprise-grade cybersecurity and encrypted cloud storage built for small businesses. Starting at $55/mo.">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<script defer data-domain="nexussecurity.com" src="https://plausible.io/js/script.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Nexus Security",
+  "description": "Enterprise-grade cybersecurity and encrypted cloud storage for small businesses. Threat monitoring, secure file storage, and email threat scanning.",
+  "url": "https://nexussecurity.com",
+  "logo": "https://nexussecurity.com/icons/icon-512.png",
+  "image": "https://nexussecurity.com/icons/icon-512.png",
+  "priceRange": "$55 - $179/mo",
+  "email": "contact@nexussecurity.com",
+  "sameAs": [],
+  "offers": [
+    { "@type": "Offer", "name": "Starter Plan", "price": "55", "priceCurrency": "USD" },
+    { "@type": "Offer", "name": "Growth Plan",  "price": "99", "priceCurrency": "USD" },
+    { "@type": "Offer", "name": "Pro Plan",     "price": "179", "priceCurrency": "USD" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" class="active" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" id="nav-pricing">Pricing</button>
+    <button onclick="window.location.href='/pages/threats.html'" id="nav-threats">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'" id="nav-security">Security</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-home">
+ 
+  <section class="hero">
+    <div class="hero-orb"></div>
+    <div class="hero-orb2"></div>
+    <div class="hero-badge">🔒 Simple, Affordable Protection for Your Business</div>
+    <h1>
+      Protect What<br>
+      <span class="line2">Matters Most</span>
+    </h1>
+    <p class="hero-sub">We keep your important business files safe, back them up automatically, and help protect your computers — so you can focus on your business instead of worrying about data loss or scams.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="window.location.href='/pages/login.html?signup=1'">Start Free Trial</button>
+      <button class="btn-outline" onclick="showPage('about')">Learn More</button>
+    </div>
+ 
+    <div class="stats-bar" id="statsBar">
+      <div class="stat">
+        <span class="stat-num">AES-256</span>
+        <span class="stat-label">File Encryption</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="24" data-suffix="/7">0</span>
+        <span class="stat-label">Automated Monitoring</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">Daily</span>
+        <span class="stat-label">Automated Backups</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">Local</span>
+        <span class="stat-label">Human Support</span>
+      </div>
+    </div>
+  </section>
+ 
+  <div class="divider"></div>
+ 
+  <!-- Features -->
+  <section class="section">
+    <div class="section-tag">What We Do For You</div>
+    <h2 class="section-title">Everything You Need.<br>Nothing You Don't.</h2>
+    <p class="section-sub">We handle all the technical stuff — keeping your files safe, backed up, and protected — so you can focus on running your business.</p>
+ 
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">☁️</div>
+        <h3>Safe File Storage</h3>
+        <p>Your important files — contracts, photos, records — are saved safely online. Even if your computer breaks or gets stolen, everything is still there.</p>
+        <div class="feature-detail">
+          <div class="feature-detail-divider"></div>
+          <ul>
+            <li>Your files are protected with strong AES-256 encryption — no one can read them without your permission</li>
+            <li>Your files live in durable cloud storage, with automatic backups protecting your data against hardware failure</li>
+            <li>Your files are stored across multiple data centers, so even if one has a problem, your data is safe</li>
+            <li>Store common business files — documents, photos, spreadsheets, PDFs, and more (up to 100 MB each)</li>
+          </ul>
+          <div class="feature-detail-note">No technical setup required — we configure and monitor everything for you.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Around-the-Clock Protection</h3>
+        <p>Automated monitoring keeps an eye on your accounts day and night, helping you spot suspicious sign-ins and scam emails before they become a problem.</p>
+        <div class="feature-detail">
+          <div class="feature-detail-divider"></div>
+          <ul>
+            <li>Incoming email is scanned for phishing and scam messages around the clock (included with every plan)</li>
+            <li>If we spot a suspicious sign-in or account event, you get an email or in-app alert right away</li>
+            <li>We notice when someone signs in from an unfamiliar location and alert you immediately</li>
+            <li>Uploads are checked and risky file types are blocked automatically</li>
+          </ul>
+          <div class="feature-detail-note">Two-factor authentication adds an extra lock on every account.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Control Who Sees What</h3>
+        <p>You decide exactly which employees can see which files — keeping sensitive information private and in the right hands.</p>
+        <div class="feature-detail">
+          <div class="feature-detail-divider"></div>
+          <ul>
+            <li>Set each team member as an admin or a standard user, so not everyone has full control</li>
+            <li>Files belong to your business account — only admins can see everyone's files</li>
+            <li>See a full record of who opened, downloaded, or deleted any file, and exactly when</li>
+            <li>When someone leaves, an admin can remove their access immediately</li>
+          </ul>
+          <div class="feature-detail-note">Add team members up to your plan's limit — 3 on Starter, 10 on Growth, 50 on Pro. Need more? Build a custom plan.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>A Clear Record of Everything</h3>
+        <p>See exactly who accessed which files and when. A clear activity history gives you peace of mind and helps with any records you need to keep.</p>
+        <div class="feature-detail">
+          <div class="feature-detail-divider"></div>
+          <ul>
+            <li>Every file upload, open, download, and deletion is logged with the user, time, and IP address</li>
+            <li>Download your full activity history any time as a spreadsheet</li>
+            <li>See your active login sessions and get alerted when someone signs in from a new location</li>
+            <li>Strong access controls and audit logs are useful building blocks if you're working toward compliance</li>
+          </ul>
+          <div class="feature-detail-note">Clear records and access controls — useful tools, not a substitute for formal compliance certification.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Back Up and Running Fast</h3>
+        <p>If something goes wrong — a virus, a flood, a stolen laptop — we get your business back to normal quickly. Every hour you're down costs you money.</p>
+        <div class="feature-detail">
+          <div class="feature-detail-divider"></div>
+          <ul>
+            <li>Download any file — or export everything at once as a ZIP — in just a few clicks</li>
+            <li>Automatic backups help protect your data against loss</li>
+            <li>Your files are stored with a cloud provider built for high availability and durability</li>
+            <li>A real person walks you through every step of recovery — we don't just send you a link to read</li>
+          </ul>
+          <div class="feature-detail-note">Automated backups mean a bad day doesn't have to mean lost work.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <h3>Local Support</h3>
+        <p>Real people, local to your community. We show up when you need us — not just over email.</p>
+        <div class="feature-detail">
+          <div class="feature-detail-divider"></div>
+          <ul>
+            <li>Direct phone line to a real team member — no call centers, no overseas outsourcing</li>
+            <li>We come to you to set everything up — no tech knowledge needed on your end</li>
+            <li>We aim to respond within 2 hours during business hours</li>
+            <li>We speak plain English, not jargon — every explanation is built for business owners, not engineers</li>
+          </ul>
+          <div class="feature-detail-note">You'll have our cell number, not just a support ticket queue.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <div class="divider"></div>
+
+  <!-- Our promise -->
+  <section class="section">
+    <div class="section-tag">Our Promise</div>
+    <h2 class="section-title">A New Kind of Security Partner</h2>
+    <p class="section-sub">We're a new, locally owned business — which means you get straight talk, real attention, and none of the call-center runaround.</p>
+
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">Plain English, always. We explain what we're doing and why — built for business owners, not engineers. No jargon, no scare tactics.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">💬</div>
+          <div>
+            <div class="testimonial-name">Straight Talk</div>
+            <div class="testimonial-biz">No Jargon</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">We come to you to get everything set up, and you'll have a direct line to a real person — not a ticket queue or an overseas call center.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">🤝</div>
+          <div>
+            <div class="testimonial-name">Personal Service</div>
+            <div class="testimonial-biz">Local & Hands-On</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">No long-term contracts and honest, upfront pricing. Stay because the service is good — not because you're locked in.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">✅</div>
+          <div>
+            <div class="testimonial-name">No Lock-In</div>
+            <div class="testimonial-biz">Cancel Anytime</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust-badges">
+      <div class="trust-badge"><span>🔒</span> AES-256 Encryption</div>
+      <div class="trust-badge"><span>🔑</span> Two-Factor Authentication</div>
+      <div class="trust-badge"><span>💾</span> Daily Automated Backups</div>
+      <div class="trust-badge"><span>📍</span> Locally Owned</div>
+      <div class="trust-badge"><span>📞</span> No Call Centers</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Protection ticker -->
+  <div class="threat-ticker-wrap">
+    <div class="threat-ticker-label">🛡️ INCLUDED</div>
+    <div class="threat-ticker-track" id="threatTrack"></div>
+  </div>
+
+  <!-- Newsletter -->
+  <section class="section" style="text-align:center;padding-bottom:60px">
+    <div class="section-tag">Free Security Updates</div>
+    <h2 class="section-title" style="margin-bottom:14px">Get Monthly Security Tips</h2>
+    <p style="color:#8a8074;font-size:15px;max-width:420px;margin:0 auto 28px;line-height:1.7">Plain-English advice for small business owners. No spam, no selling your info — just useful tips once a month.</p>
+    <form id="newsletterForm" onsubmit="submitNewsletter(event)" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:460px;margin:0 auto">
+      <input id="newsletterEmail" type="email" placeholder="your@email.com" required
+        style="flex:1;min-width:220px;background:#f5efe7;border:1px solid #ebe3d7;border-radius:8px;padding:12px 18px;font-size:14px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s"
+        onfocus="this.style.borderColor='#0e9a86'" onblur="this.style.borderColor='#ebe3d7'">
+      <button type="submit" class="btn-primary" style="cursor:pointer;white-space:nowrap">Subscribe Free</button>
+    </form>
+    <div id="newsletterMsg" style="margin-top:14px;font-size:13px;color:#7ec99b;display:none"></div>
+  </section>
+
+  <!-- Pricing CTA -->
+  <section class="section" style="text-align:center">
+    <div class="section-tag">What It Costs</div>
+    <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <p class="section-sub" style="margin:0 auto 40px">Plans starting at $55 a month — includes email threat scanning powered by Proofpoint. No hidden fees, no long-term contracts.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-primary" onclick="showPage('pricing')">See All Plans →</button>
+      <button class="btn-outline" onclick="showPage('contact')">Talk to Us First</button>
+    </div>
+  </section>
+ 
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">NEXUS<span>SEC</span></div>
+        <p class="footer-brand-desc">Enterprise-grade cybersecurity and cloud protection built for local businesses. Real people, local support, serious security.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('home')">Cloud Storage</button></li>
+          <li><button onclick="showPage('home')">Threat Monitoring</button></li>
+          <li><button onclick="showPage('home')">Access Control</button></li>
+          <li><button onclick="showPage('home')">Disaster Recovery</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('about')">About Us</button></li>
+          <li><button onclick="showPage('pricing')">Pricing</button></li>
+          <li><button onclick="showPage('cases')">Case Studies</button></li>
+          <li><button onclick="showPage('resources')">Security Tips</button></li>
+          <li><button onclick="showPage('faq')">FAQ</button></li>
+          <li><button onclick="showPage('contact')">Contact</button></li>
+          <li><button onclick="showPage('privacy')">Privacy Policy</button></li>
+          <li><button onclick="showPage('terms')">Terms of Service</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Reach Us</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('contact')">your@email.com</button></li>
+          <li><button onclick="showPage('contact')">(555) 000-0000</button></li>
+          <li><button onclick="showPage('contact')">Your City, Your State</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo">NEXUS<span>SEC</span></div>
+      <div class="footer-copy">© 2026 Nexus Security, LLC. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="js/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

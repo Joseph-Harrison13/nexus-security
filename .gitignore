@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets — never commit these
+.env
+.env.*
+!.env.example
+certs/
+
+# Database (and SQLite WAL/SHM sidecar files)
+db/*.db
+db/*.db-shm
+db/*.db-wal
+
+# User data & generated artifacts
+uploads/
+backups/
+logs/
+
+# Test & build output
+coverage/
+test/.uploads/
+
+# OS cruft
+.DS_Store
+**/.DS_Store

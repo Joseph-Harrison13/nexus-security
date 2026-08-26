@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FAQ — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<meta name="description" content="Frequently asked questions about Nexus Security — how our cybersecurity and cloud storage works, what's included in each plan, and how to get started.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FAQ — Nexus Security">
+<meta property="og:description" content="Common questions about our cybersecurity and cloud storage plans, setup process, and what to expect.">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FAQ — Nexus Security">
+<meta name="twitter:description" content="Common questions about our cybersecurity and cloud storage plans answered.">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" class="active" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" id="nav-pricing">Pricing</button>
+    <button onclick="window.location.href='/pages/threats.html'" id="nav-threats">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'" id="nav-security">Security</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-faq">
+  <section class="section" style="padding-top:140px">
+    <div class="section-tag">Frequently Asked Questions</div>
+    <h2 class="section-title">Questions? <span style="color:#c8a96e">We've Got Answers.</span></h2>
+    <p class="section-sub">Everything you need to know before getting started. Don't see your question? Reach out — we respond fast.</p>
+
+    <div style="position:relative;max-width:480px;margin-bottom:40px">
+      <input id="faqSearch" type="text" placeholder="Search questions…"
+        style="width:100%;background:#f5efe7;border:1px solid #ebe3d7;border-radius:10px;padding:12px 44px 12px 18px;font-size:14px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s"
+        onfocus="this.style.borderColor='#0e9a86'" onblur="this.style.borderColor='#ebe3d7'">
+      <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#948a7d;font-size:16px;pointer-events:none">🔍</span>
+    </div>
+    <div id="faqNoResults" style="display:none;padding:32px;text-align:center;color:#948a7d;font-size:14px">No questions match your search.</div>
+
+    <div class="faq-category" data-faq-cat="General">General</div>
+    <div id="faq-list-general"></div>
+ 
+    <div class="faq-category">Security & Data</div>
+    <div id="faq-list-security"></div>
+ 
+    <div class="faq-category">Pricing & Plans</div>
+    <div id="faq-list-pricing"></div>
+ 
+    <div class="faq-category">Support & Onboarding</div>
+    <div id="faq-list-support"></div>
+ 
+    <div class="faq-cta">
+      <h3>Still have questions?</h3>
+      <p>We're real people, local to your community, and happy to talk it through — no sales pressure.</p>
+      <button class="btn-primary" onclick="showPage('contact')">Contact Us</button>
+    </div>
+  </section>
+ 
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">NEXUS<span>SEC</span></div>
+        <p class="footer-brand-desc">Enterprise-grade cybersecurity and cloud protection built for local businesses. Real people, local support, serious security.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('home')">Cloud Storage</button></li>
+          <li><button onclick="showPage('home')">Threat Monitoring</button></li>
+          <li><button onclick="showPage('home')">Access Control</button></li>
+          <li><button onclick="showPage('home')">Disaster Recovery</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-col-links">
+          <li><button onclick="window.location.href='/pages/about.html'">About Us</button></li>
+          <li><button onclick="window.location.href='/pages/security.html'">Security</button></li>
+          <li><button onclick="window.location.href='/pages/pricing.html'">Pricing</button></li>
+          <li><button onclick="window.location.href='/pages/case-studies.html'">How We Help</button></li>
+          <li><button onclick="window.location.href='/pages/resources.html'">Security Tips</button></li>
+          <li><button onclick="window.location.href='/pages/faq.html'">FAQ</button></li>
+          <li><button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button></li>
+          <li><button onclick="window.location.href='/pages/privacy.html'">Privacy Policy</button></li>
+          <li><button onclick="window.location.href='/pages/terms.html'">Terms of Service</button></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Reach Us</div>
+        <ul class="footer-col-links">
+          <li><button onclick="showPage('contact')">your@email.com</button></li>
+          <li><button onclick="showPage('contact')">(555) 000-0000</button></li>
+          <li><button onclick="showPage('contact')">Your City, Your State</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo">NEXUS<span>SEC</span></div>
+      <div class="footer-copy">© 2026 Nexus Security, LLC. All rights reserved.</div>
+    </div>
+  </footer>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initPageSearch('faqSearch', '.faq-item');
+  const input = document.getElementById('faqSearch');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase();
+    let visible = 0;
+    document.querySelectorAll('.faq-item').forEach(el => {
+      const show = !q || el.textContent.toLowerCase().includes(q);
+      el.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    document.querySelectorAll('.faq-category').forEach(cat => {
+      cat.style.display = q ? 'none' : '';
+    });
+    const nr = document.getElementById('faqNoResults');
+    if (nr) nr.style.display = visible === 0 && q ? 'block' : 'none';
+  });
+});
+</script>
+<script src="../js/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

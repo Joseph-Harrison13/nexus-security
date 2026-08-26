@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  .legal-page { max-width: 780px; margin: 0 auto; padding: 120px 24px 80px; position: relative; z-index: 1; }
+  .legal-tag  { font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 4px; color: #0e9a86; text-transform: uppercase; margin-bottom: 12px; }
+  .legal-title { font-family: 'Poppins', sans-serif; font-size: clamp(32px, 5vw, 52px); font-weight: 700; color: #2b2723; margin-bottom: 12px; }
+  .legal-date  { font-family: 'DM Sans', sans-serif; font-size: 12px; color: #948a7d; letter-spacing: 1px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid #eee7dc; }
+  .legal-section { margin-bottom: 40px; }
+  .legal-section h2 { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 600; color: #4a443d; margin-bottom: 14px; }
+  .legal-section p, .legal-section li { font-size: 15px; color: #8a8074; line-height: 1.8; margin-bottom: 10px; }
+  .legal-section ul { padding-left: 20px; }
+  .legal-section li { margin-bottom: 6px; }
+  .legal-highlight { background: #f5efe7; border-left: 3px solid #0e9a86; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+  .legal-highlight p { color: #948a7d; margin: 0; }
+  .legal-contact-box { background: #ffffff; border: 1px solid #ebe3d7; border-radius: 12px; padding: 24px 28px; margin-top: 40px; }
+  .legal-contact-box h3 { font-size: 16px; color: #4a443d; margin-bottom: 10px; }
+  .legal-contact-box p { font-size: 14px; color: #8a8074; line-height: 1.7; margin: 0; }
+  .legal-contact-box a { color: #0e9a86; text-decoration: none; }
+</style>
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+    <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+    <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+    <button onclick="window.location.href='/pages/login.html'" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="legal-page">
+  <div class="legal-tag">// Legal</div>
+  <h1 class="legal-title">Privacy Policy</h1>
+  <div class="legal-date">Last updated: June 1, 2026 &nbsp;·&nbsp; Effective: June 1, 2026</div>
+
+  <div class="legal-highlight">
+    <p>We keep this simple: we collect only what we need to run your account, we never sell your data, and you can ask us to delete it anytime.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>1. Who We Are</h2>
+    <p>Nexus Security, LLC ("Nexus Security", "we", "us", or "our") provides cybersecurity and cloud protection services to small businesses. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website and services.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>2. Information We Collect</h2>
+    <p>We collect information you give us directly and information generated when you use our services:</p>
+    <ul>
+      <li><strong style="color:#33302b">Account information</strong> — your name, email address, and password (stored encrypted) when you create an account.</li>
+      <li><strong style="color:#33302b">Contact form submissions</strong> — your name, email, business name, and message when you contact us.</li>
+      <li><strong style="color:#33302b">Files you upload</strong> — documents and data you store through our cloud storage service.</li>
+      <li><strong style="color:#33302b">Usage data</strong> — login times, IP addresses, and activity logs for security monitoring and fraud prevention.</li>
+      <li><strong style="color:#33302b">Device information</strong> — browser type and operating system to optimize your experience.</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>3. How We Use Your Information</h2>
+    <p>We use your information to:</p>
+    <ul>
+      <li>Provide and maintain your account and cloud storage</li>
+      <li>Send you security alerts and account notifications</li>
+      <li>Respond to your support requests and messages</li>
+      <li>Detect and prevent fraud, unauthorized access, and security threats</li>
+      <li>Improve our services based on usage patterns</li>
+      <li>Comply with legal obligations</li>
+    </ul>
+    <p>We do <strong style="color:#33302b">not</strong> sell, rent, or share your personal information with third parties for marketing purposes.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>4. Data Storage and Security</h2>
+    <p>Your data is stored on servers we control and is protected by:</p>
+    <ul>
+      <li>AES-256 encryption at rest</li>
+      <li>TLS 1.2+ encryption in transit</li>
+      <li>Multi-factor authentication requirements</li>
+      <li>Automatic encrypted backups retained for 7 days</li>
+      <li>Access controls limiting which staff can view your data</li>
+    </ul>
+    <p>No method of transmission over the internet is 100% secure. We take commercially reasonable steps to protect your information but cannot guarantee absolute security.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>5. Cookies</h2>
+    <p>We use cookies and similar technologies for:</p>
+    <ul>
+      <li><strong style="color:#33302b">Session cookies</strong> — to keep you logged in during your session (required for the service to work)</li>
+      <li><strong style="color:#33302b">Preference cookies</strong> — to remember your consent choices</li>
+    </ul>
+    <p>We do not use advertising or tracking cookies. You can disable cookies in your browser settings, but this will prevent you from logging in.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>6. Data Retention</h2>
+    <p>We keep your data for as long as your account is active. When you close your account:</p>
+    <ul>
+      <li>Your files are deleted within 30 days</li>
+      <li>Account records are retained for 90 days in case of disputes, then deleted</li>
+      <li>Security logs (IP addresses, login times) are retained for 12 months for fraud prevention</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>7. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li><strong style="color:#33302b">Access</strong> — request a copy of the personal data we hold about you</li>
+      <li><strong style="color:#33302b">Correction</strong> — ask us to fix inaccurate information</li>
+      <li><strong style="color:#33302b">Deletion</strong> — ask us to delete your account and associated data</li>
+      <li><strong style="color:#33302b">Portability</strong> — request your data in a machine-readable format</li>
+      <li><strong style="color:#33302b">Objection</strong> — object to certain processing of your information</li>
+    </ul>
+    <p>To exercise any of these rights, contact us at the address below. We will respond within 30 days.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>8. Children's Privacy</h2>
+    <p>Our services are not directed to children under 13. We do not knowingly collect personal information from children. If you believe a child has provided us information, please contact us immediately.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>9. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. We will notify you of significant changes by email or by posting a notice on our website at least 30 days before the change takes effect.</p>
+  </div>
+
+  <div class="legal-contact-box">
+    <h3>Questions about this policy?</h3>
+    <p>Contact us at <a href="/pages/contact.html">our contact page</a> or email us directly. We aim to respond to all privacy inquiries within 48 hours.</p>
+  </div>
+</div>
+
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+<script src="../js/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Security — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../css/styles.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" id="nav-pricing">Pricing</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-dash-security">
+  <div class="dash-layout">
+    <div class="dash-sidebar" id="sb-security"></div>
+    <div class="dash-main">
+      <div id="dash-tabs"></div>
+      <div class="dash-header"><div class="dash-greeting">Security Center</div><div class="dash-date">Score: —/100</div></div>
+      <div class="dash-metrics" style="margin-bottom:20px">
+        <div class="metric-card" style="--mc:#7ec99b"><div class="metric-label">Threats Blocked</div><div class="metric-val">0</div><div class="metric-sub">This month</div><div class="metric-badge" style="background:rgba(126,201,155,0.1);color:#7ec99b">All Clear</div></div>
+        <div class="metric-card" style="--mc:#7eb8c9"><div class="metric-label">Login Attempts</div><div class="metric-val">0</div><div class="metric-sub">Suspicious — blocked</div><div class="metric-badge" style="background:rgba(126,184,201,0.1);color:#7eb8c9">Blocked</div></div>
+        <div class="metric-card" style="--mc:#c8a96e"><div class="metric-label">Encryption</div><div class="metric-val" style="font-size:22px;margin-top:4px">AES-256</div><div class="metric-sub">All data encrypted</div><div class="metric-badge" style="background:rgba(200,169,110,0.1);color:#c8a96e">Active</div></div>
+        <div class="metric-card" style="--mc:#7ec99b"><div class="metric-label">Security Score</div><div class="metric-val" style="color:#7ec99b">—</div><div class="metric-sub">out of 100</div><div class="metric-badge" style="background:rgba(126,201,155,0.1);color:#7ec99b">Loading</div></div>
+      </div>
+      <div class="dash-section-head"><div class="dash-section-title">Score Breakdown</div></div>
+      <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:12px;padding:22px;margin-bottom:20px" id="scoreItems"></div>
+      <div class="dash-section-head"><div class="dash-section-title">Devices &amp; Sessions</div><button class="dash-section-action" onclick="revokeOtherSessions()">Sign out all other devices →</button></div>
+      <div class="activity-feed" id="sessionList" style="margin-bottom:20px">
+        <div style="text-align:center;padding:32px 20px;color:#948a7d;font-size:14px">Loading sessions…</div>
+      </div>
+      <div class="dash-section-head"><div class="dash-section-title">Activity History</div><button class="dash-section-action" onclick="exportActivityCsv()">Download as spreadsheet →</button></div>
+      <div class="activity-feed" id="activityFeed">
+        <div style="text-align:center;padding:32px 20px;color:#948a7d;font-size:14px">Loading activity…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="../../js/script.js"></script>
+<script>document.addEventListener('DOMContentLoaded', initDashboard);</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

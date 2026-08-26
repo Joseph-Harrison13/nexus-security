@@ -1,0 +1,9 @@
+node_modules
+public
+backups
+uploads
+logs
+coverage
+test/.uploads
+db/*.db
+package-lock.json

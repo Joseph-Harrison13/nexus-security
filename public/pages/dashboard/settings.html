@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Settings — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../css/styles.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home">Home</button>
+    <button onclick="showPage('about')" id="nav-about">About</button>
+    <button onclick="showPage('faq')" id="nav-faq">FAQ</button>
+    <button onclick="showPage('pricing')" id="nav-pricing">Pricing</button>
+    <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+    <button onclick="showPage('login')" id="nav-login" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="page active" id="page-dash-settings">
+  <div class="dash-layout">
+    <div class="dash-sidebar" id="sb-settings"></div>
+    <div class="dash-main">
+      <div id="dash-tabs"></div>
+      <div class="dash-header"><div class="dash-greeting">Settings</div><div class="dash-date" id="settingsPlanBadge">—</div></div>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:640px">
+        <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;color:#2b2723;margin-bottom:18px">Company Info</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Company Name</div><input type="text" value="" id="settingCompany" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+            <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Admin Email</div><input type="email" value="" id="settingEmail" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+            <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Phone</div><input type="text" value="" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+            <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Industry</div><select style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;appearance:none"><option selected>Legal</option><option>Healthcare</option><option>Real Estate</option><option>Retail</option><option>Finance</option><option>Other</option></select></div>
+          </div>
+          <button onclick="saveSettings()" style="margin-top:16px;background:#33302b;color:#faf6f0;border:none;border-radius:8px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;font-weight:500">Save Changes</button>
+        </div>
+        <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;color:#2b2723;margin-bottom:18px">Notifications</div>
+          <div id="toggleList"></div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid #ebe3d7">
+            <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:10px">Browser Push Notifications</div>
+            <p style="font-size:13px;color:#8a8074;margin-bottom:14px;line-height:1.6">Get instant alerts in your browser even when the dashboard isn't open — for logins, security events, and file activity.</p>
+            <div id="pushStatus" style="font-size:13px;color:#8a8074;margin-bottom:12px">Checking…</div>
+            <button id="pushBtn" onclick="togglePushNotifications()" style="background:transparent;border:1px solid #ebe3d7;border-radius:8px;padding:10px 20px;color:#33302b;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#8a8074'" onmouseout="this.style.borderColor='#ebe3d7'">Enable Notifications</button>
+          </div>
+        </div>
+        <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;color:#2b2723;margin-bottom:18px">Security</div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+            <div style="flex:1">
+              <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:8px">Email Two-Factor Authentication</div>
+              <p style="font-size:13px;color:#8a8074;line-height:1.6;margin:0">When on, we email you a 6-digit code to enter each time you sign in. When off, we'll still send a code if you sign in from a new location. <span style="color:#14b39c">Recommended.</span></p>
+              <div id="email2faMsg" style="font-size:12px;color:#14b39c;margin-top:8px;min-height:14px"></div>
+            </div>
+            <button id="email2faToggle" onclick="toggleEmail2fa()" role="switch" aria-checked="true"
+              style="flex-shrink:0;position:relative;width:48px;height:26px;border-radius:13px;border:none;cursor:pointer;background:#0e9a86;transition:background 0.2s;margin-top:2px">
+              <span id="email2faKnob" style="position:absolute;top:3px;left:25px;width:20px;height:20px;border-radius:50%;background:#2b2723;transition:left 0.2s"></span>
+            </button>
+          </div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-top:20px;padding-top:20px;border-top:1px solid #ebe3d7">
+            <div style="flex:1">
+              <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:8px">Authenticator App (TOTP)</div>
+              <p style="font-size:13px;color:#8a8074;line-height:1.6;margin:0">Use an app like Google Authenticator or Authy for codes that work even without email. <span style="color:#14b39c">Strongest option.</span></p>
+              <div id="totpStatus" style="font-size:13px;margin-top:8px;min-height:16px;color:#8a8074">Checking…</div>
+            </div>
+            <button id="totpBtn" onclick="totpButtonClick()" style="flex-shrink:0;background:transparent;border:1px solid #ebe3d7;border-radius:8px;padding:9px 18px;color:#14b39c;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;white-space:nowrap;margin-top:2px">Set Up</button>
+          </div>
+        </div>
+        <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;color:#2b2723;margin-bottom:18px">Change Password</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Current Password</div><input type="password" id="pwCurrent" placeholder="••••••••" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+            <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">New Password</div><input type="password" id="pwNew" placeholder="Min 8 chars, upper + lower + number + symbol" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+            <div><div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;color:#8a8074;text-transform:uppercase;margin-bottom:7px">Confirm New Password</div><input type="password" id="pwConfirm" placeholder="••••••••" style="width:100%;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:11px 14px;color:#2b2723;font-family:'DM Sans',sans-serif;font-size:14px;outline:none"/></div>
+            <div id="pwMsg" style="font-size:12px;min-height:16px"></div>
+            <button id="pwBtn" onclick="changePassword()" style="background:transparent;border:1px solid #ebe3d7;border-radius:8px;padding:12px 24px;color:#33302b;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer;width:fit-content">Update Password</button>
+          </div>
+        </div>
+        <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:12px;padding:24px">
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;color:#2b2723;margin-bottom:10px">Your Data</div>
+          <div style="font-size:13px;color:#8a8074;margin-bottom:16px;line-height:1.6">Download a copy of everything we hold about your account — your profile, folders, file list, share links, and full activity history — as a JSON file.</div>
+          <button onclick="exportAccountData()" style="background:transparent;border:1px solid #ebe3d7;border-radius:8px;padding:11px 20px;color:#14b39c;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer">⬇ Download My Data</button>
+        </div>
+        <div style="background:#ffffff;border:1px solid rgba(248,113,113,0.3);border-radius:12px;padding:24px">
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;color:#f87171;margin-bottom:10px">Danger Zone</div>
+          <div style="font-size:13px;color:#8a8074;margin-bottom:16px;line-height:1.6">Permanently delete your account and all data — files, folders, share links, and history. <strong style="color:#f87171">This cannot be undone.</strong></div>
+          <button onclick="deleteAccount()" style="background:transparent;border:1px solid rgba(248,113,113,0.4);border-radius:8px;padding:11px 20px;color:#f87171;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer">Delete My Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+
+<script src="../../js/script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initDashboard();
+  // Populate plan badge from stored session
+  const u = getStoredUser();
+  const badge = document.getElementById('settingsPlanBadge');
+  if (badge && u) badge.textContent = (u.name || '') + ' · ' + (u.plan || '') + ' Plan';
+  loadEmail2faState();
+});
+
+let _email2faOn = true;
+function paintEmail2fa(on) {
+  _email2faOn = !!on;
+  const t = document.getElementById('email2faToggle');
+  const k = document.getElementById('email2faKnob');
+  if (!t || !k) return;
+  t.style.background = on ? '#0e9a86' : '#e2d9ca';
+  t.setAttribute('aria-checked', on ? 'true' : 'false');
+  k.style.left = on ? '25px' : '3px';
+}
+let _require2fa = false;
+async function loadEmail2faState() {
+  try {
+    const me = await api('GET', '/auth/me');
+    if (me) {
+      paintEmail2fa(me.email_2fa !== 0);
+      paintTotp(me.totp_enabled === 1);
+      _require2fa = !!me.require_2fa;
+      if (_require2fa) {
+        const t = document.getElementById('email2faToggle');
+        if (t) { t.style.opacity = '0.6'; t.style.cursor = 'not-allowed'; }
+        const msg = document.getElementById('email2faMsg');
+        if (msg) { msg.style.color = '#8a8074'; msg.textContent = '🔒 Required by your administrator — can\'t be turned off.'; }
+      }
+    }
+  } catch { /* leave default */ }
+}
+async function toggleEmail2fa() {
+  if (_require2fa && _email2faOn) {
+    const msg = document.getElementById('email2faMsg');
+    if (msg) { msg.style.color = '#8a8074'; msg.textContent = '🔒 Your administrator requires two-factor authentication.'; }
+    return;
+  }
+  const next = !_email2faOn;
+  const msg = document.getElementById('email2faMsg');
+  paintEmail2fa(next); // optimistic
+  try {
+    const r = await api('POST', '/auth/email-2fa', { enabled: next });
+    if (msg) { msg.style.color = '#14b39c'; msg.textContent = r.message || ''; setTimeout(() => { if (msg) msg.textContent = ''; }, 3500); }
+  } catch (e) {
+    paintEmail2fa(!next); // revert on failure
+    if (msg) { msg.style.color = '#ef4444'; msg.textContent = e.message || 'Could not update setting.'; }
+  }
+}
+
+// ── Authenticator app (TOTP) ──
+let _totpEnabled = false;
+let _backupCodes = [];
+function paintTotp(on) {
+  _totpEnabled = !!on;
+  const status = document.getElementById('totpStatus');
+  const btn = document.getElementById('totpBtn');
+  if (status) status.innerHTML = on ? '✓ <span style="color:#22c55e">Enabled</span>' : 'Not set up';
+  if (btn) { btn.textContent = on ? 'Disable' : 'Set Up'; btn.style.color = on ? '#f87171' : '#14b39c'; }
+}
+function totpButtonClick() {
+  if (_totpEnabled) disableTotp();
+  else startTotpSetup();
+}
+async function disableTotp() {
+  const pw = prompt('Enter your password to turn off the authenticator app:');
+  if (!pw) return;
+  try {
+    await api('POST', '/auth/disable-2fa', { password: pw });
+    paintTotp(false);
+    showToast('Authenticator app turned off. Your account still uses email verification.');
+  } catch (e) { showToast(e.message || 'Could not disable.'); }
+}
+async function startTotpSetup() {
+  let data;
+  try { data = await api('GET', '/auth/setup-2fa'); }
+  catch (e) { showToast(e.message || 'Could not start setup.'); return; }
+  showTotpModal(data.qrDataUrl, data.secret);
+}
+function closeTotpModal() { document.getElementById('totpModal')?.remove(); }
+function showTotpModal(qr, secret) {
+  closeTotpModal();
+  const overlay = document.createElement('div');
+  overlay.id = 'totpModal';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:10002;display:flex;align-items:center;justify-content:center;background:rgba(10,14,22,0.78);backdrop-filter:blur(5px);padding:24px';
+  overlay.innerHTML = `
+    <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:18px;padding:32px;max-width:380px;text-align:center;box-shadow:0 16px 60px rgba(60,50,35,0.10)">
+      <div style="font-family:'Poppins',sans-serif;font-size:24px;font-weight:700;color:#2b2723;margin-bottom:6px">Set Up Authenticator</div>
+      <p style="font-size:13px;color:#8a8074;line-height:1.6;margin-bottom:16px">Scan this code with Google Authenticator, Authy, or similar — then enter the 6-digit code it shows.</p>
+      <img src="${qr}" alt="QR code" style="width:184px;height:184px;border-radius:10px;background:#2b2723;padding:8px;margin:0 auto 14px"/>
+      <div style="font-size:11px;color:#948a7d;margin-bottom:6px">Or enter this key manually:</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#14b39c;word-break:break-all;background:#f5efe7;border:1px solid #eee7dc;border-radius:6px;padding:8px;margin-bottom:16px">${escapeHtml(secret)}</div>
+      <input id="totpCode" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="123456" style="width:100%;text-align:center;letter-spacing:8px;font-family:'DM Sans',sans-serif;font-size:22px;background:#ffffff;border:1px solid #e2d9ca;border-radius:8px;padding:12px;color:#2b2723;outline:none;margin-bottom:8px"/>
+      <div id="totpErr" style="font-size:12px;color:#f87171;min-height:16px;margin-bottom:8px"></div>
+      <div style="display:flex;gap:10px">
+        <button onclick="closeTotpModal()" class="btn-outline" style="flex:1;cursor:pointer">Cancel</button>
+        <button onclick="confirmTotp()" class="btn-primary" style="flex:2;cursor:pointer">Verify &amp; Enable</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const input = document.getElementById('totpCode');
+  input.focus();
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') confirmTotp(); });
+}
+async function confirmTotp() {
+  const code = document.getElementById('totpCode').value.trim();
+  const err = document.getElementById('totpErr');
+  if (!/^\d{6}$/.test(code)) { err.textContent = 'Enter the 6-digit code from your app.'; return; }
+  try {
+    const r = await api('POST', '/auth/confirm-2fa', { code });
+    _backupCodes = r.backupCodes || [];
+    paintTotp(true);
+    showBackupCodes(_backupCodes);
+  } catch (e) { err.textContent = e.message || 'That code is incorrect.'; }
+}
+function showBackupCodes(codes) {
+  const modal = document.getElementById('totpModal');
+  if (!modal) return;
+  modal.innerHTML = `
+    <div style="background:#ffffff;border:1px solid #ebe3d7;border-radius:18px;padding:32px;max-width:380px;text-align:center;box-shadow:0 16px 60px rgba(60,50,35,0.10)">
+      <div style="font-size:40px;margin-bottom:6px">✅</div>
+      <div style="font-family:'Poppins',sans-serif;font-size:24px;font-weight:700;color:#2b2723;margin-bottom:6px">Authenticator Enabled</div>
+      <p style="font-size:13px;color:#fbbf24;line-height:1.6;margin-bottom:16px">Save these backup codes somewhere safe — each works once if you ever lose your device. <strong>They won't be shown again.</strong></p>
+      <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#14b39c;background:#f5efe7;border:1px solid #eee7dc;border-radius:8px;padding:14px;margin-bottom:14px;line-height:1.9;letter-spacing:1px">
+        ${codes.map((c) => escapeHtml(c)).join('<br>')}
+      </div>
+      <button onclick="copyBackupCodes()" class="btn-outline" style="width:100%;cursor:pointer;margin-bottom:8px">Copy Codes</button>
+      <button onclick="closeTotpModal()" class="btn-primary" style="width:100%;cursor:pointer">I've Saved Them</button>
+    </div>`;
+}
+async function copyBackupCodes() {
+  try { await navigator.clipboard.writeText(_backupCodes.join('\n')); showToast('Backup codes copied.'); }
+  catch { showToast('Copy failed — select the codes and copy manually.'); }
+}
+
+async function exportAccountData() {
+  showToast('Preparing your data export…');
+  try {
+    const res = await fetch('/api/auth/export', { headers: { Authorization: 'Bearer ' + getToken() } });
+    if (!res.ok) { showToast('Export failed.'); return; }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'nexus-account-data.json'; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch { showToast('Export failed.'); }
+}
+
+async function deleteAccount() {
+  if (!confirm('Permanently delete your account and ALL of your data?\n\nThis removes your files, folders, share links, and history. It cannot be undone.')) return;
+  const password = prompt('To confirm, enter your password:');
+  if (!password) return;
+  try {
+    await api('DELETE', '/auth/me', { password });
+    alert('Your account has been permanently deleted.');
+    clearAuth();
+    window.location.href = '/';
+  } catch (e) {
+    showToast(e.message || 'Could not delete account.');
+  }
+}
+
+async function changePassword() {
+  const current  = document.getElementById('pwCurrent').value;
+  const newPw    = document.getElementById('pwNew').value;
+  const confirm  = document.getElementById('pwConfirm').value;
+  const msgEl    = document.getElementById('pwMsg');
+  const btn      = document.getElementById('pwBtn');
+
+  msgEl.style.color = '#ef4444';
+  if (!current || !newPw || !confirm) { msgEl.textContent = 'Please fill in all three fields.'; return; }
+  if (newPw !== confirm)              { msgEl.textContent = 'New passwords do not match.'; return; }
+  if (newPw.length < 8)              { msgEl.textContent = 'New password must be at least 8 characters.'; return; }
+
+  btn.disabled = true; btn.textContent = 'Updating…';
+  try {
+    const r = await api('POST', '/auth/change-password', { currentPassword: current, newPassword: newPw });
+    if (r) {
+      msgEl.style.color  = '#22c55e';
+      msgEl.textContent  = '✓ Password updated successfully.';
+      document.getElementById('pwCurrent').value = '';
+      document.getElementById('pwNew').value     = '';
+      document.getElementById('pwConfirm').value = '';
+    }
+  } catch (e) {
+    msgEl.textContent = e.message || 'Could not update password.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Update Password';
+  }
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

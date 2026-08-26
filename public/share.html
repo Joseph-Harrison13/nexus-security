@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shared File — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/styles.css">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<meta name="robots" content="noindex">
+<style>
+  .share-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; position:relative; z-index:1; }
+  .share-box { width:100%; max-width:440px; background:#ffffff; border:1px solid #ebe3d7; border-radius:16px; padding:40px 36px; text-align:center; }
+  .share-logo { font-family:'DM Sans',sans-serif; font-size:12px; letter-spacing:4px; color:#948a7d; text-transform:uppercase; margin-bottom:28px; }
+  .share-logo span { color:#14b39c; }
+  .share-icon { font-size:46px; margin-bottom:12px; }
+  .share-name { font-family:'Poppins',sans-serif; font-size:24px; font-weight:700; color:#2b2723; margin-bottom:6px; word-break:break-word; }
+  .share-meta { font-family:'DM Sans',sans-serif; font-size:11px; color:#948a7d; letter-spacing:1px; margin-bottom:26px; }
+  .share-field { margin-bottom:16px; text-align:left; }
+  .share-field label { display:block; font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:2px; color:#8a8074; text-transform:uppercase; margin-bottom:8px; }
+  .share-field input { width:100%; background:#ffffff; border:1px solid #e2d9ca; border-radius:8px; padding:13px 16px; color:#2b2723; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; }
+  .share-field input:focus { border-color:rgba(14,154,134,0.6); box-shadow:0 0 0 3px rgba(14,154,134,0.08); }
+  .share-error { display:none; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.25); border-radius:8px; padding:12px 16px; color:#f87171; font-size:13px; margin-bottom:16px; }
+  .share-note { font-size:12px; color:#948a7d; margin-top:18px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<div class="share-wrap">
+  <div class="share-box">
+    <div class="share-logo">NEXUS<span>SEC</span> · Secure Share</div>
+    <div id="shareLoading" style="color:#8a8074;font-size:14px;padding:20px">Loading…</div>
+
+    <div id="shareContent" style="display:none">
+      <div class="share-icon">📄</div>
+      <div class="share-name" id="shareName">—</div>
+      <div class="share-meta" id="shareMeta"></div>
+      <div class="share-error" id="shareError"></div>
+      <div class="share-field" id="pwField" style="display:none">
+        <label>Password required</label>
+        <input type="password" id="sharePw" placeholder="Enter the password" autocomplete="off"/>
+      </div>
+      <button class="btn-primary" id="dlBtn" style="width:100%;cursor:pointer" onclick="downloadShare()">Download File</button>
+      <div class="share-note">This file was shared with you via Nexus Security. Only download files from people you trust.</div>
+    </div>
+
+    <div id="shareUnavailable" style="display:none">
+      <div class="share-icon">🔒</div>
+      <div class="share-name">Link Unavailable</div>
+      <div class="share-meta" id="unavailMsg" style="margin-top:10px"></div>
+      <button class="btn-outline" style="margin-top:24px;cursor:pointer" onclick="window.location.href='/'">Go to Nexus Security</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOKEN = new URLSearchParams(location.search).get('t') || '';
+function fmtSize(b){ if(b>=1048576)return (b/1048576).toFixed(1)+' MB'; if(b>=1024)return Math.round(b/1024)+' KB'; return b+' B'; }
+
+async function init() {
+  if (!TOKEN) return showUnavailable('No share link provided.');
+  try {
+    const res  = await fetch('/api/share/' + encodeURIComponent(TOKEN));
+    const data = await res.json();
+    document.getElementById('shareLoading').style.display = 'none';
+    if (!data.available) return showUnavailable(data.message || 'This link is unavailable.');
+    document.getElementById('shareContent').style.display = 'block';
+    document.getElementById('shareName').textContent = data.fileName;
+    const bits = [fmtSize(data.size)];
+    if (data.expiresAt)     bits.push('expires ' + new Date(data.expiresAt).toLocaleDateString());
+    if (data.downloadsLeft != null) bits.push(data.downloadsLeft + ' download' + (data.downloadsLeft===1?'':'s') + ' left');
+    document.getElementById('shareMeta').textContent = bits.join(' · ');
+    if (data.requiresPassword) document.getElementById('pwField').style.display = 'block';
+  } catch {
+    document.getElementById('shareLoading').style.display = 'none';
+    showUnavailable('Could not load this link. Please try again.');
+  }
+}
+
+function showUnavailable(msg) {
+  document.getElementById('shareLoading').style.display = 'none';
+  document.getElementById('shareContent').style.display = 'none';
+  const u = document.getElementById('shareUnavailable');
+  u.style.display = 'block';
+  document.getElementById('unavailMsg').textContent = msg;
+}
+
+async function downloadShare() {
+  const btn = document.getElementById('dlBtn');
+  const err = document.getElementById('shareError');
+  const pw  = document.getElementById('sharePw')?.value || '';
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Preparing…';
+  try {
+    const res = await fetch('/api/share/' + encodeURIComponent(TOKEN) + '/download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    if (!res.ok) {
+      let m = 'Download failed.';
+      try { m = (await res.json()).error || m; } catch {}
+      err.textContent = m; err.style.display = 'block';
+      return;
+    }
+    const blob = await res.blob();
+    const name = document.getElementById('shareName').textContent || 'download';
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    btn.textContent = '✓ Downloaded';
+    setTimeout(() => init(), 800); // refresh remaining-downloads state
+  } catch {
+    err.textContent = 'Download failed. Please try again.'; err.style.display = 'block';
+  } finally {
+    btn.disabled = false; if (btn.textContent === 'Preparing…') btn.textContent = 'Download File';
+  }
+}
+init();
+</script>
+<script src="/js/script.js"></script>
+</body>
+</html>

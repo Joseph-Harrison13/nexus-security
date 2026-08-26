@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Verify Email — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  .verify-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .verify-card {
+    background: rgba(18,18,18,0.92);
+    border: 1px solid #e2d9ca;
+    border-radius: 16px;
+    padding: 56px 48px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    backdrop-filter: blur(12px);
+  }
+  .verify-icon {
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .verify-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: #2b2723;
+    margin-bottom: 12px;
+  }
+  .verify-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #948a7d;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .verify-status {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-bottom: 28px;
+    display: none;
+  }
+  .verify-status.loading  { display:block; color:#948a7d; border:1px solid #e2d9ca; background:#f5efe7; }
+  .verify-status.success  { display:block; color:#22c55e; border:1px solid rgba(34,197,94,0.3); background:rgba(34,197,94,0.08); }
+  .verify-status.error    { display:block; color:#ef4444; border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); }
+  .verify-detail {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #8a8074;
+    margin-bottom: 32px;
+    min-height: 20px;
+  }
+  .verify-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .verify-actions a,
+  .verify-actions button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #0e9a86, #1d4ed8);
+    color: #2b2723;
+  }
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid #e2d9ca !important;
+    color: #948a7d;
+  }
+  .btn-secondary:hover { border-color: #0e9a86 !important; color: #0e9a86; }
+  .resend-wrap { margin-top: 24px; border-top: 1px solid #eee7dc; padding-top: 24px; }
+  .resend-wrap p { font-size: 13px; color: #8a8074; margin-bottom: 12px; }
+  #resendStatus { font-size: 13px; margin-top: 8px; min-height: 18px; }
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid #ddd3c4;
+    border-top-color: #0e9a86;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/login.html'">Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/login.html'">Login</button>
+</div>
+
+<main class="verify-page">
+  <div class="verify-card">
+    <span class="verify-icon" id="verifyIcon">✉️</span>
+    <h1 class="verify-title" id="verifyTitle">Verifying Email</h1>
+    <p class="verify-subtitle" id="verifySubtitle">Please wait while we confirm your email address.</p>
+
+    <div class="verify-status loading" id="verifyStatus">
+      <span class="spinner"></span>Checking token…
+    </div>
+    <p class="verify-detail" id="verifyDetail"></p>
+
+    <div class="verify-actions" id="verifyActions" style="display:none"></div>
+
+    <div class="resend-wrap" id="resendWrap" style="display:none">
+      <p>Didn't get the email or link expired?</p>
+      <button class="btn-secondary" onclick="resendVerification()" style="width:auto;padding:10px 24px;border-radius:6px;font-family:Outfit,sans-serif;font-size:13px;background:transparent;color:#948a7d;cursor:pointer">Resend verification email</button>
+      <p id="resendStatus"></p>
+    </div>
+  </div>
+</main>
+
+<script src="../js/script.js"></script>
+<script>
+(function () {
+  const params  = new URLSearchParams(window.location.search);
+  const token   = params.get('token');
+  const icon    = document.getElementById('verifyIcon');
+  const title   = document.getElementById('verifyTitle');
+  const sub     = document.getElementById('verifySubtitle');
+  const status  = document.getElementById('verifyStatus');
+  const detail  = document.getElementById('verifyDetail');
+  const actions = document.getElementById('verifyActions');
+  const resend  = document.getElementById('resendWrap');
+
+  function setSuccess(msg, detailMsg) {
+    icon.textContent  = '✅';
+    title.textContent = 'Email Verified';
+    sub.textContent   = msg;
+    status.className  = 'verify-status success';
+    status.innerHTML  = '✓ Verification complete';
+    detail.textContent = detailMsg || '';
+    actions.style.display = 'flex';
+    actions.innerHTML = `
+      <a href="/pages/dashboard/overview.html" class="btn-primary">Go to Dashboard</a>
+    `;
+  }
+
+  function setError(msg, detailMsg, showResend) {
+    icon.textContent  = '⚠️';
+    title.textContent = 'Verification Failed';
+    sub.textContent   = msg;
+    status.className  = 'verify-status error';
+    status.innerHTML  = '✗ Could not verify';
+    detail.textContent = detailMsg || '';
+    actions.style.display = 'flex';
+    actions.innerHTML = `
+      <a href="/" class="btn-secondary">Back to Home</a>
+    `;
+    if (showResend) resend.style.display = 'block';
+  }
+
+  if (!token) {
+    // No token — show "check your inbox" state
+    icon.textContent  = '📬';
+    title.textContent = 'Check Your Inbox';
+    sub.textContent   = 'A verification link was sent to your email address. Click the link to confirm your account.';
+    status.style.display = 'none';
+    detail.textContent = 'The link expires in 24 hours.';
+    resend.style.display = 'block';
+    actions.style.display = 'flex';
+    actions.innerHTML = `<a href="/" class="btn-secondary">Back to Home</a>`;
+    return;
+  }
+
+  // Verify the token
+  fetch(`/api/auth/verify-email?token=${encodeURIComponent(token)}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        if (data.code === 'TOKEN_EXPIRED') {
+          setError('Your verification link has expired.', 'Links are valid for 24 hours. Request a new one below.', true);
+        } else if (data.code === 'TOKEN_INVALID') {
+          setError('This verification link is invalid.', 'It may have already been used. Try logging in.', true);
+        } else {
+          setError('Verification failed.', data.error, true);
+        }
+      } else {
+        setSuccess('Your email address has been confirmed.', 'Your account is now fully active.');
+      }
+    })
+    .catch(() => {
+      setError('Could not connect to the server.', 'Please check your connection and try again.', false);
+    });
+})();
+
+async function resendVerification() {
+  const statusEl = document.getElementById('resendStatus');
+  const token = localStorage.getItem('accessToken');
+  if (!token) {
+    statusEl.style.color = '#ef4444';
+    statusEl.textContent = 'Please log in first to resend your verification email.';
+    return;
+  }
+  statusEl.style.color = '#948a7d';
+  statusEl.textContent = 'Sending…';
+  try {
+    const r = await fetch('/api/auth/send-verification', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const d = await r.json();
+    if (r.ok) {
+      statusEl.style.color = '#22c55e';
+      statusEl.textContent = 'Email sent — check your inbox.';
+    } else {
+      statusEl.style.color = '#ef4444';
+      statusEl.textContent = d.error || 'Failed to send email.';
+    }
+  } catch {
+    statusEl.style.color = '#ef4444';
+    statusEl.textContent = 'Network error — please try again.';
+  }
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

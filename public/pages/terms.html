@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Terms of Service — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  .legal-page { max-width: 780px; margin: 0 auto; padding: 120px 24px 80px; position: relative; z-index: 1; }
+  .legal-tag  { font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 4px; color: #0e9a86; text-transform: uppercase; margin-bottom: 12px; }
+  .legal-title { font-family: 'Poppins', sans-serif; font-size: clamp(32px, 5vw, 52px); font-weight: 700; color: #2b2723; margin-bottom: 12px; }
+  .legal-date  { font-family: 'DM Sans', sans-serif; font-size: 12px; color: #948a7d; letter-spacing: 1px; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid #eee7dc; }
+  .legal-section { margin-bottom: 40px; }
+  .legal-section h2 { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 600; color: #4a443d; margin-bottom: 14px; }
+  .legal-section p, .legal-section li { font-size: 15px; color: #8a8074; line-height: 1.8; margin-bottom: 10px; }
+  .legal-section ul { padding-left: 20px; }
+  .legal-section li { margin-bottom: 6px; }
+  .legal-highlight { background: #f5efe7; border-left: 3px solid #0e9a86; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+  .legal-highlight p { color: #948a7d; margin: 0; }
+  .legal-contact-box { background: #ffffff; border: 1px solid #ebe3d7; border-radius: 12px; padding: 24px 28px; margin-top: 40px; }
+  .legal-contact-box h3 { font-size: 16px; color: #4a443d; margin-bottom: 10px; }
+  .legal-contact-box p { font-size: 14px; color: #8a8074; line-height: 1.7; margin: 0; }
+  .legal-contact-box a { color: #0e9a86; text-decoration: none; }
+</style>
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+    <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+    <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+    <button onclick="window.location.href='/pages/login.html'" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="legal-page">
+  <div class="legal-tag">// Legal</div>
+  <h1 class="legal-title">Terms of Service</h1>
+  <div class="legal-date">Last updated: June 1, 2026 &nbsp;·&nbsp; Effective: June 1, 2026</div>
+
+  <div class="legal-highlight">
+    <p>By using Nexus Security services, you agree to these terms. Please read them — they're written in plain English, not legalese.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>1. The Service</h2>
+    <p>Nexus Security, LLC ("we", "us", "our") provides cloud storage, security monitoring, and cybersecurity services to small businesses ("you", "your"). These Terms of Service ("Terms") govern your use of our website and services.</p>
+    <p>By creating an account or using our services, you agree to be bound by these Terms. If you disagree with any part, please do not use our services.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>2. Your Account</h2>
+    <p>To use our services, you must:</p>
+    <ul>
+      <li>Be at least 18 years old and have the authority to enter into these Terms on behalf of your business</li>
+      <li>Provide accurate, complete information when creating your account</li>
+      <li>Keep your password secure and not share it with others</li>
+      <li>Notify us immediately if you suspect unauthorized access to your account</li>
+    </ul>
+    <p>You are responsible for all activity that occurs under your account.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>3. Acceptable Use</h2>
+    <p>You may use our services for lawful business purposes only. You agree not to:</p>
+    <ul>
+      <li>Upload, store, or transmit illegal content or content that violates third-party rights</li>
+      <li>Use our services to attack, hack, or disrupt other systems or networks</li>
+      <li>Attempt to gain unauthorized access to our systems or other users' data</li>
+      <li>Resell or sublicense our services without written permission</li>
+      <li>Upload malware, viruses, or any malicious code</li>
+      <li>Exceed storage limits for your plan</li>
+    </ul>
+    <p>Violations may result in immediate account suspension without refund.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>4. Storage and Data</h2>
+    <p>Each plan includes a storage limit. You are responsible for managing your storage usage. We reserve the right to suspend accounts that exceed their plan limits after 14 days' written notice.</p>
+    <p>We perform automatic encrypted backups and retain 7 days of backup history. While we take every precaution, we recommend maintaining your own copies of critical data. We are not liable for data loss resulting from events outside our reasonable control.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>5. Payment and Billing</h2>
+    <ul>
+      <li>Subscription fees are billed monthly or annually in advance</li>
+      <li>All fees are non-refundable except as required by law or at our discretion</li>
+      <li>We will provide 30 days' notice before any price changes</li>
+      <li>Accounts overdue by more than 14 days may be suspended; data held for 30 days before deletion</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>6. Service Availability</h2>
+    <p>We aim for 99.9% uptime but do not guarantee uninterrupted service. Scheduled maintenance will be communicated in advance. We are not liable for damages resulting from service interruptions beyond our reasonable control (e.g., natural disasters, power failures, internet outages).</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>7. Intellectual Property</h2>
+    <p>You retain ownership of all data and files you upload to our service. By uploading, you grant us a limited license to store and process your data solely to provide the service.</p>
+    <p>Our website, software, branding, and documentation are owned by Nexus Security and protected by copyright law. You may not copy, modify, or distribute them without permission.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>8. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, Nexus Security's total liability for any claim arising from these Terms or your use of our services shall not exceed the amount you paid us in the 3 months preceding the claim.</p>
+    <p>We are not liable for indirect, incidental, special, or consequential damages, including lost profits or data.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>9. Termination</h2>
+    <p>Either party may terminate the service agreement at any time. You may cancel your account from the dashboard settings. We may terminate accounts that violate these Terms.</p>
+    <p>Upon termination, your data will be retained for 30 days to allow export, then permanently deleted.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>10. Changes to These Terms</h2>
+    <p>We may update these Terms. For material changes, we will notify you by email at least 30 days in advance. Continued use of the service after the effective date constitutes acceptance of the new Terms.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>11. Governing Law</h2>
+    <p>These Terms are governed by the laws of the state in which Nexus Security is incorporated, without regard to conflict of law principles.</p>
+  </div>
+
+  <div class="legal-contact-box">
+    <h3>Questions about these terms?</h3>
+    <p>Reach us through <a href="/pages/contact.html">our contact page</a>. We're happy to explain anything in plain English.</p>
+  </div>
+</div>
+
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+<script src="../js/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Security &amp; Trust — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<meta name="description" content="How Nexus Security protects your data — encryption, two-factor authentication, automatic backups, access controls, and monitoring. Plus how to report a vulnerability.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Security & Trust — Nexus Security">
+<meta property="og:description" content="A transparent look at exactly how we protect your business data — encryption, 2FA, backups, access controls, and monitoring.">
+<meta property="og:image" content="/icons/icon-512.png">
+<style>
+  .sec-hero { padding:140px 40px 50px; max-width:760px; margin:0 auto; text-align:center; position:relative; z-index:1; }
+  .sec-hero h1 { font-size:clamp(34px,6vw,62px); line-height:1.05; margin-bottom:18px; }
+  .sec-hero p { font-size:17px; color:#8a8074; line-height:1.75; max-width:580px; margin:0 auto; }
+  .sec-section { max-width:980px; margin:0 auto; padding:0 40px 40px; position:relative; z-index:1; }
+  @media (max-width:600px){ .sec-section{padding:0 20px 30px} .sec-hero{padding:130px 24px 40px} }
+  .sec-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; }
+  .sec-card { background:#ffffff; border:1px solid #ebe3d7; border-radius:14px; padding:26px; transition:border-color 0.3s, transform 0.3s; }
+  .sec-card:hover { border-color:rgba(14,154,134,0.3); transform:translateY(-3px); }
+  .sec-card-icon { width:46px; height:46px; border-radius:10px; background:rgba(14,154,134,0.08); border:1px solid rgba(14,154,134,0.2); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:16px; }
+  .sec-card h3 { font-size:17px; font-weight:700; color:#2b2723; margin-bottom:10px; }
+  .sec-card ul { list-style:none; margin:0; padding:0; }
+  .sec-card li { font-size:13.5px; color:#8a8074; line-height:1.6; padding:5px 0; display:flex; gap:9px; align-items:flex-start; }
+  .sec-card li::before { content:'✓'; color:#14b39c; flex-shrink:0; font-size:13px; }
+  .sec-note { background:rgba(14,154,134,0.04); border:1px solid rgba(14,154,134,0.2); border-left:3px solid #0e9a86; border-radius:0 10px 10px 0; padding:20px 24px; margin:8px auto 0; max-width:980px; }
+  .sec-note p { font-size:14px; color:#8a8074; line-height:1.7; margin:0; }
+  .sec-disclose { background:#ffffff; border:1px solid rgba(14,154,134,0.25); border-radius:16px; padding:40px; text-align:center; max-width:760px; margin:40px auto 80px; position:relative; z-index:1; box-shadow:0 0 50px rgba(14,154,134,0.06); }
+  @media (max-width:600px){ .sec-disclose{padding:32px 24px;margin:30px 20px 60px} }
+  .sec-disclose h2 { font-size:clamp(24px,4vw,34px); margin-bottom:14px; }
+  .sec-disclose p { font-size:15px; color:#8a8074; max-width:520px; margin:0 auto 22px; line-height:1.7; }
+  .sec-mail { display:inline-block; font-family:'DM Sans',sans-serif; font-size:14px; color:#14b39c; border:1px solid rgba(14,154,134,0.35); border-radius:8px; padding:11px 22px; text-decoration:none; background:rgba(14,154,134,0.06); }
+  .sec-divider { height:1px; background:linear-gradient(90deg,transparent,rgba(14,154,134,0.25),rgba(255,255,255,0.1),rgba(14,154,134,0.25),transparent); margin:30px 0 40px; }
+  .trust-badges { max-width:980px; margin:0 auto 34px; padding:0 40px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center; position:relative; z-index:1; }
+  .trust-badge { display:flex; align-items:center; gap:9px; background:#ffffff; border:1px solid #ebe3d7; border-radius:999px; padding:9px 18px; font-family:'DM Sans',sans-serif; font-size:13px; color:#33302b; font-weight:600; }
+  .trust-badge span { font-size:15px; }
+  @media (max-width:600px){ .trust-badges{padding:0 20px} }
+  .commit-list { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px 28px; }
+  .commit-list li { font-size:14px; color:#8a8074; line-height:1.6; padding-left:28px; position:relative; }
+  .commit-list li::before { content:'✓'; position:absolute; left:0; top:0; color:#14b39c; font-weight:700; }
+  .commit-list strong { color:#33302b; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+    <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+    <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button class="active" onclick="window.location.href='/pages/security.html'">Security</button>
+    <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+    <button onclick="window.location.href='/pages/login.html'" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+  <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="sec-hero">
+  <div class="section-tag" style="justify-content:center;display:flex;margin-bottom:16px">Security &amp; Trust</div>
+  <h1>How We Protect<br><span class="line2">Your Data</span></h1>
+  <p>We're a security company, so we hold ourselves to a high bar — and we believe in showing our work, not hiding behind badges. Here's exactly how your data is protected.</p>
+</div>
+
+<div class="trust-badges">
+  <div class="trust-badge"><span>🔐</span> Mandatory 2FA on every account</div>
+  <div class="trust-badge"><span>🔒</span> AES-256 encryption</div>
+  <div class="trust-badge"><span>🧪</span> Tested against the OWASP Top&nbsp;10</div>
+  <div class="trust-badge"><span>📢</span> Responsible disclosure program</div>
+</div>
+
+<div class="sec-section">
+  <div class="sec-grid">
+    <div class="sec-card">
+      <div class="sec-card-icon">🔒</div>
+      <h3>Encryption</h3>
+      <ul>
+        <li>Files encrypted at rest with AES-256-GCM — tamper-evident storage</li>
+        <li>All traffic encrypted in transit over HTTPS / TLS</li>
+        <li>Passwords hashed with bcrypt — never stored in plain text</li>
+      </ul>
+    </div>
+    <div class="sec-card">
+      <div class="sec-card-icon">🔑</div>
+      <h3>Account Security</h3>
+      <ul>
+        <li>Two-factor authentication is <strong style="color:#33302b">required</strong> on every account</li>
+        <li>Authenticator-app (TOTP) sign-in with one-time backup codes</li>
+        <li>New-location sign-ins require an emailed verification code</li>
+        <li>Passwords checked against known breach databases at sign-up</li>
+        <li>Automatic lockout after repeated failed login attempts</li>
+      </ul>
+    </div>
+    <div class="sec-card">
+      <div class="sec-card-icon">👁️</div>
+      <h3>Access &amp; Visibility</h3>
+      <ul>
+        <li>Role-based access — admins and standard users</li>
+        <li>Files belong to your account; only admins see everything</li>
+        <li>Every file action is logged with user, time, and IP</li>
+        <li>See and sign out active devices any time</li>
+      </ul>
+    </div>
+    <div class="sec-card">
+      <div class="sec-card-icon">💾</div>
+      <h3>Backups &amp; Recovery</h3>
+      <ul>
+        <li>Automatic backups protect against data loss</li>
+        <li>Deleted files sit in a recoverable Trash for 30 days</li>
+        <li>Stored on cloud infrastructure built for high durability</li>
+      </ul>
+    </div>
+    <div class="sec-card">
+      <div class="sec-card-icon">🛡️</div>
+      <h3>Monitoring &amp; Hardening</h3>
+      <ul>
+        <li>Email scanned for phishing and scams (every plan)</li>
+        <li>Rate limiting blocks brute-force and abuse</li>
+        <li>Uploads validated by content, and risky file types blocked</li>
+        <li>Security headers and a strict content policy</li>
+      </ul>
+    </div>
+    <div class="sec-card">
+      <div class="sec-card-icon">🔗</div>
+      <h3>Safe Sharing</h3>
+      <ul>
+        <li>Share links expire automatically (you choose when)</li>
+        <li>Optional password protection on any shared link</li>
+        <li>Revoke a link instantly — access stops immediately</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-note">
+    <p><strong style="color:#33302b">Being honest about where we are:</strong> We're a new company and are <strong>not yet certified</strong> against formal frameworks like SOC&nbsp;2, ISO&nbsp;27001, or HIPAA. The controls above are real and active, and they're the same building blocks those frameworks require — but we'd rather tell you plainly than imply a certification we don't hold. As we grow, pursuing formal certification is on our roadmap.</p>
+  </div>
+</div>
+
+<div class="sec-section" style="padding-top:10px">
+  <div class="section-tag" style="justify-content:center;display:flex;margin-bottom:16px">Our Commitments</div>
+  <h2 style="text-align:center;font-size:clamp(24px,4vw,34px);margin-bottom:26px">What You Can Expect From Us</h2>
+  <div class="sec-card" style="padding:30px 32px">
+    <ul class="commit-list">
+      <li><strong>Your data is yours.</strong> Export or permanently delete your files at any time.</li>
+      <li><strong>Least-privilege access.</strong> Internal access is limited to the minimum needed to run the service.</li>
+      <li><strong>Prompt breach notification.</strong> If your data is ever affected, we'll tell you quickly and clearly.</li>
+      <li><strong>Fast patching.</strong> We monitor our software dependencies and fix known vulnerabilities promptly.</li>
+      <li><strong>Ongoing security testing.</strong> The app is tested against common web attacks (the OWASP Top 10) as we build.</li>
+      <li><strong>Transparency over badges.</strong> We tell you plainly what we do and don't have — no security theater.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="sec-divider" style="max-width:760px;margin-left:auto;margin-right:auto"></div>
+
+<div class="sec-disclose">
+  <div class="section-tag" style="justify-content:center;display:flex;margin-bottom:14px">Responsible Disclosure</div>
+  <h2>Found a Security Issue?</h2>
+  <p>We take security reports seriously and appreciate the people who help keep our customers safe. If you've found a vulnerability, please tell us privately before disclosing it publicly, and we'll work with you to fix it quickly.</p>
+  <a class="sec-mail" href="mailto:security@nexussecurity.com">security@nexussecurity.com</a>
+</div>
+
+<footer>
+  <div class="footer-logo">NEXUS<span style="color:#14b39c">SEC</span></div>
+  <div class="footer-copy">© 2026 Nexus Security. All rights reserved.</div>
+  <div style="display:flex;gap:20px;font-size:12px;font-family:'DM Sans',sans-serif;letter-spacing:1px">
+    <a href="/pages/privacy.html" style="color:#5a5249;text-decoration:none">Privacy</a>
+    <a href="/pages/terms.html" style="color:#5a5249;text-decoration:none">Terms</a>
+  </div>
+</footer>
+
+<script src="../js/script.js"></script>
+</body>
+</html>

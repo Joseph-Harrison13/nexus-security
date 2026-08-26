@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Security Resources — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  .res-hero { padding: 120px 24px 60px; text-align: center; position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .res-grid  { max-width: 1100px; margin: 0 auto; padding: 0 24px 100px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; position: relative; z-index: 1; }
+  @media (max-width: 760px) { .res-grid { grid-template-columns: 1fr; } }
+  .article-card { background: #ffffff; border: 1px solid #ebe3d7; border-radius: 16px; overflow: hidden; transition: border-color 0.3s, transform 0.3s; cursor: pointer; display: flex; flex-direction: column; }
+  .article-card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-4px); }
+  .article-top { padding: 28px 28px 0; }
+  .article-tag { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  .tag-beginner  { color: #7ec99b; }
+  .tag-important { color: #ef4444; }
+  .tag-tips      { color: #0e9a86; }
+  .tag-business  { color: #c8a96e; }
+  .article-title { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 600; color: #2b2723; margin-bottom: 10px; line-height: 1.3; }
+  .article-sub   { font-size: 14px; color: #8a8074; line-height: 1.6; }
+  .article-body  { padding: 20px 28px 28px; flex: 1; display: flex; flex-direction: column; }
+  .article-content { font-size: 14px; color: #8a8074; line-height: 1.8; margin-bottom: 20px; flex: 1; }
+  .article-content p { margin-bottom: 10px; }
+  .article-content ul { padding-left: 18px; }
+  .article-content li { margin-bottom: 6px; }
+  .article-content strong { color: #8a8074; }
+  .article-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid #eee7dc; }
+  .article-read   { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #948a7d; letter-spacing: 2px; text-transform: uppercase; }
+  .article-cta    { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #0e9a86; letter-spacing: 1px; background: none; border: none; cursor: pointer; transition: color 0.2s; }
+  .article-cta:hover { color: #14b39c; }
+  .tip-box { background: #f5efe7; border: 1px solid #eee7dc; border-radius: 10px; padding: 14px 18px; margin: 12px 0; }
+  .tip-box-label { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #0e9a86; margin-bottom: 6px; }
+  .tip-box p { font-size: 13px; color: #8a8074; margin: 0; }
+  .checklist-section { background: rgba(255,255,255,0.015); border-top: 1px solid #f5efe7; padding: 80px 24px; position: relative; z-index: 1; }
+  .checklist-inner { max-width: 760px; margin: 0 auto; }
+  .checklist { list-style: none; padding: 0; margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .checklist { grid-template-columns: 1fr; } }
+  .checklist li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #8a8074; line-height: 1.5; padding: 14px 16px; background: #ffffff; border: 1px solid #ebe3d7; border-radius: 10px; }
+  .checklist li .chk { width: 20px; height: 20px; border-radius: 50%; border: 1px solid #ebe3d7; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .chk-done { background: rgba(126,201,155,0.1); border-color: rgba(126,201,155,0.3); color: #7ec99b; }
+  .chk-warn { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); color: #ef4444; }
+</style>
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<meta name="description" content="Free cybersecurity tips for small business owners. Learn about two-factor authentication, backups, phishing, and password managers in plain English.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Security Resources — Nexus Security">
+<meta property="og:description" content="Free practical cybersecurity advice for small business owners. No jargon, just steps you can take today to protect your business.">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Security Tips — Nexus Security">
+<meta name="twitter:description" content="Practical cybersecurity advice for small business owners. 2FA, backups, phishing, and passwords explained simply.">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+    <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+    <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+    <button onclick="window.location.href='/pages/login.html'" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<div class="res-hero">
+  <div class="section-tag">Free Resources</div>
+  <h1 class="section-title" style="margin-bottom:16px">Security Tips for<br>Small Business Owners</h1>
+  <p style="font-size:16px;color:#8a8074;line-height:1.7">No technical jargon. Just practical advice you can act on today to keep your business safer.</p>
+  <div style="position:relative;max-width:400px;margin:20px auto 0">
+    <input id="resourceSearch" type="text" placeholder="Search tips…"
+      style="width:100%;background:#f5efe7;border:1px solid #ebe3d7;border-radius:10px;padding:12px 44px 12px 18px;font-size:14px;color:#33302b;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s"
+      onfocus="this.style.borderColor='#0e9a86'" onblur="this.style.borderColor='#ebe3d7'">
+    <span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#948a7d;font-size:16px;pointer-events:none">🔍</span>
+  </div>
+</div>
+
+<div class="res-grid">
+
+  <!-- Article 1 -->
+  <div class="article-card">
+    <div class="article-top">
+      <div class="article-tag tag-important">⚠ Most Important</div>
+      <h2 class="article-title">The One Thing That Stops Most Hacks Dead</h2>
+      <p class="article-sub">Why two-factor authentication is the single biggest security upgrade you can make today — and it's free.</p>
+    </div>
+    <div class="article-body">
+      <div class="article-content">
+        <p>Every year, millions of business accounts get hacked — not because of sophisticated attacks, but because someone guessed or stole a password. Here's the uncomfortable truth: <strong>passwords alone aren't enough anymore.</strong></p>
+        <p>Two-factor authentication (2FA) means that even if someone gets your password, they still can't get in without a second code that only you have — usually from an app on your phone.</p>
+        <div class="tip-box">
+          <div class="tip-box-label">How it works</div>
+          <p>You enter your password as normal. Then you're asked for a 6-digit code that changes every 30 seconds on your phone. No code = no access.</p>
+        </div>
+        <p>Turn it on for your email first — that's the master key to everything else. Then your bank, accounting software, and anywhere else you store important business data.</p>
+        <ul>
+          <li>Gmail: Settings → Security → 2-Step Verification</li>
+          <li>Microsoft 365: Account → Security Info → Add sign-in method</li>
+          <li>Free apps: Google Authenticator, Authy</li>
+        </ul>
+      </div>
+      <div class="article-footer">
+        <span class="article-read">5 min read</span>
+        <button class="article-cta" onclick="window.location.href='/pages/contact.html'">Get Help Setting This Up →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article 2 -->
+  <div class="article-card">
+    <div class="article-top">
+      <div class="article-tag tag-beginner">✓ Beginner Friendly</div>
+      <h2 class="article-title">Why Your Business Needs a Backup — and How to Know If Yours Actually Works</h2>
+      <p class="article-sub">A backup you haven't tested is not a backup. Here's what real protection looks like.</p>
+    </div>
+    <div class="article-body">
+      <div class="article-content">
+        <p>Ransomware attacks on small businesses doubled last year. When they hit, you have two choices: pay the ransom or restore from backup. Only one of those options doesn't involve giving money to criminals.</p>
+        <p><strong>The 3-2-1 rule:</strong> Keep 3 copies of important data, on 2 different types of storage, with 1 copy offsite (like the cloud).</p>
+        <div class="tip-box">
+          <div class="tip-box-label">Warning sign</div>
+          <p>If you can't name exactly where your backup is and when it last ran, you probably don't have one that works.</p>
+        </div>
+        <p>Most small businesses have no backup at all, or a backup they've never tested. Testing means actually restoring a file — not just assuming the backup ran because a light turned green.</p>
+        <ul>
+          <li>Run a test restore of a real file every month</li>
+          <li>Make sure backups run automatically — daily at minimum</li>
+          <li>Store at least one copy somewhere other than your office</li>
+        </ul>
+      </div>
+      <div class="article-footer">
+        <span class="article-read">4 min read</span>
+        <button class="article-cta" onclick="window.location.href='/pages/contact.html'">Audit My Backup Setup →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article 3 -->
+  <div class="article-card">
+    <div class="article-top">
+      <div class="article-tag tag-tips">💡 Quick Tips</div>
+      <h2 class="article-title">How to Spot a Phishing Email Before It's Too Late</h2>
+      <p class="article-sub">Phishing is the #1 way hackers get into small businesses. Learn the warning signs in under 5 minutes.</p>
+    </div>
+    <div class="article-body">
+      <div class="article-content">
+        <p>Phishing emails are fake messages designed to trick you into clicking a bad link or giving up your password. They're getting better every year — some are nearly impossible to tell from the real thing.</p>
+        <p>Here's what to look for before you click anything:</p>
+        <ul>
+          <li><strong>Check the sender's actual email address</strong> — "support@paypa1.com" is not PayPal.</li>
+          <li><strong>Hover over links before clicking</strong> — the URL shown at the bottom of your screen should match where you'd expect to go.</li>
+          <li><strong>Urgency is a red flag</strong> — "Your account will be closed in 24 hours!" is a pressure tactic to make you act without thinking.</li>
+          <li><strong>Unexpected attachments</strong> — if you didn't ask for a file and don't recognize the sender, don't open it.</li>
+        </ul>
+        <div class="tip-box">
+          <div class="tip-box-label">Golden rule</div>
+          <p>When in doubt, don't click the link. Go directly to the website by typing the address yourself.</p>
+        </div>
+      </div>
+      <div class="article-footer">
+        <span class="article-read">3 min read</span>
+        <button class="article-cta" onclick="window.location.href='/pages/contact.html'">Train My Team →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article 4 -->
+  <div class="article-card">
+    <div class="article-top">
+      <div class="article-tag tag-business">🏢 For Your Business</div>
+      <h2 class="article-title">The Password Problem: Why "Strong" Passwords Aren't Enough Anymore</h2>
+      <p class="article-sub">And what actually works to keep your accounts safe without going crazy trying to remember everything.</p>
+    </div>
+    <div class="article-body">
+      <div class="article-content">
+        <p>Most people use the same password (or a slight variation of it) across multiple accounts. This means one data breach at any website can unlock your email, your bank, and your business software all at once.</p>
+        <p>The solution isn't memorizing 50 different passwords. It's using a <strong>password manager</strong> — a secure app that creates and remembers strong, unique passwords for every site.</p>
+        <div class="tip-box">
+          <div class="tip-box-label">Free options</div>
+          <p>Bitwarden is free and open source. 1Password and Dashlane are excellent paid options (~$3/month). All are far better than a spreadsheet.</p>
+        </div>
+        <ul>
+          <li>Use a different password for every account — your password manager does this automatically</li>
+          <li>Make your master password a long phrase, not a word: "MyDog$Ran4Miles" is stronger than "P@ssw0rd!"</li>
+          <li>Never write passwords in a document called "passwords.txt"</li>
+        </ul>
+      </div>
+      <div class="article-footer">
+        <span class="article-read">4 min read</span>
+        <button class="article-cta" onclick="window.location.href='/pages/contact.html'">Help My Team →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Security checklist -->
+<div class="checklist-section">
+  <div class="checklist-inner">
+    <div class="section-tag">Free Tool</div>
+    <h2 class="section-title" style="margin-bottom:8px">Small Business Security Checklist</h2>
+    <p style="color:#8a8074;font-size:15px;line-height:1.6">How many of these does your business have in place? If you're missing more than 3, it's time to talk.</p>
+    <ul class="checklist">
+      <li><div class="chk chk-done">✓</div> Two-factor authentication on email</li>
+      <li><div class="chk chk-warn">!</div> Daily automated backups with offsite copy</li>
+      <li><div class="chk chk-done">✓</div> Unique passwords for every account</li>
+      <li><div class="chk chk-warn">!</div> Encrypted storage for sensitive files</li>
+      <li><div class="chk chk-done">✓</div> Staff trained to recognize phishing</li>
+      <li><div class="chk chk-warn">!</div> Plan for what to do if you're hacked</li>
+      <li><div class="chk chk-done">✓</div> Software kept updated automatically</li>
+      <li><div class="chk chk-warn">!</div> Access removed for former employees</li>
+    </ul>
+    <div style="margin-top:36px;text-align:center">
+      <button class="btn-primary" onclick="window.location.href='/pages/contact.html'" style="cursor:pointer">Get a Free Security Assessment</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;background:#ffffff;border:1px solid #ebe3d7;border-radius:10px;padding:14px 20px;font-size:13px;color:#33302b;z-index:9999;box-shadow:0 8px 30px rgba(60,50,35,0.10);font-family:'DM Sans',sans-serif;max-width:320px;animation:fadeUp 0.3s ease"></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('resourceSearch');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase();
+    document.querySelectorAll('.article-card').forEach(el => {
+      el.style.display = !q || el.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+});
+</script>
+<script src="../js/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

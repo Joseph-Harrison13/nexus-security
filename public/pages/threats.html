@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How Scams Work — Nexus Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0e9a86">
+<meta name="description" content="See real examples of phishing emails, fake invoices, and social engineering attacks that target small businesses every day — and learn how to spot them.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How Scams Work — Nexus Security">
+<meta property="og:description" content="Real-world phishing and scam examples used against small businesses. See how easy it is to get fooled — and how Nexus Security stops it.">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How Scams Work — Nexus Security">
+<meta name="twitter:description" content="Real phishing emails and scam examples targeting small businesses. Could you spot these?">
+<script defer data-domain="nexussecurity.com" src="https://plausible.io/js/script.js"></script>
+<style>
+  .threats-hero {
+    padding: 140px 40px 60px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .threats-hero h1 { font-size: clamp(36px, 6vw, 66px); line-height: 1.05; margin-bottom: 20px; }
+  .threats-hero p { font-size: 17px; color: #948a7d; line-height: 1.75; max-width: 580px; margin: 0 auto 36px; }
+  .stat-row {
+    display: flex; gap: 0; justify-content: center;
+    border: 1px solid rgba(14,154,134,0.2); border-top: 1px solid rgba(14,154,134,0.35);
+    border-radius: 12px; overflow: hidden; max-width: 680px; margin: 0 auto 80px;
+    background: #ffffff; box-shadow: 0 0 30px rgba(14,154,134,0.06);
+  }
+  .stat-row-item { flex: 1; padding: 24px 16px; text-align: center; border-right: 1px solid #e2d9ca; }
+  .stat-row-item:last-child { border-right: none; }
+  .stat-row-num { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 800; color: #2b2723; display: block; text-shadow: 0 0 20px rgba(14,154,134,0.3); }
+  .stat-row-label { font-size: 11px; color: #8a8074; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+
+  /* Threat examples */
+  .threats-section {
+    max-width: 900px; margin: 0 auto; padding: 0 40px 100px;
+    position: relative; z-index: 1;
+  }
+  @media (max-width: 600px) { .threats-section { padding: 0 20px 60px; } .threats-hero { padding: 130px 24px 40px; } }
+
+  .threat-block { margin-bottom: 80px; }
+  .threat-label {
+    font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 4px;
+    text-transform: uppercase; color: #ef4444; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .threat-label::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+  .threat-title { font-family: 'Poppins', sans-serif; font-size: clamp(22px, 3vw, 32px); font-weight: 700; color: #2b2723; margin-bottom: 8px; }
+  .threat-sub { font-size: 14px; color: #8a8074; margin-bottom: 28px; line-height: 1.65; }
+
+  /* Fake email shell */
+  .email-shell {
+    background: #f5efe7; border: 1px solid #e2d9ca; border-radius: 14px;
+    overflow: hidden; position: relative;
+  }
+  .email-toolbar {
+    background: #f5efe7; border-bottom: 1px solid #ebe3d7;
+    padding: 12px 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .email-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .email-header {
+    padding: 20px 28px 16px; border-bottom: 1px solid #ebe3d7;
+  }
+  .email-from { font-family: 'DM Sans', sans-serif; font-size: 12px; color: #8a8074; margin-bottom: 4px; }
+  .email-from span { color: #33302b; }
+  .email-subject { font-size: 18px; font-weight: 600; color: #2b2723; margin-bottom: 4px; }
+  .email-date { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #948a7d; }
+  .email-body {
+    padding: 24px 28px 28px;
+    font-size: 14px; color: #948a7d; line-height: 1.75;
+  }
+  .email-body p { margin-bottom: 12px; }
+  .email-body .email-link {
+    color: #14b39c; text-decoration: underline; cursor: default;
+  }
+  .email-btn {
+    display: inline-block;
+    background: #0070f3; color: #2b2723;
+    padding: 11px 24px; border-radius: 6px;
+    font-size: 14px; font-weight: 600; margin: 12px 0;
+    cursor: default;
+  }
+  .email-logo { font-family: 'DM Sans', sans-serif; font-size: 20px; color: #1d4ed8; margin-bottom: 18px; font-weight: 700; letter-spacing: -1px; }
+
+  /* Red flag annotations */
+  .flags { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .flag {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 10px; padding: 14px 18px;
+  }
+  .flag-num {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: #ef4444; color: #2b2723; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .flag-text { font-size: 13px; color: #999; line-height: 1.6; }
+  .flag-text strong { color: #2b2723; }
+
+  /* Highlight a span inside the email */
+  .red-flag { background: rgba(239,68,68,0.15); border-radius: 3px; padding: 1px 3px; border-bottom: 2px solid #ef4444; }
+
+  /* Text message shell */
+  .sms-shell {
+    background: #f5efe7; border: 1px solid #e2d9ca; border-radius: 14px;
+    overflow: hidden; max-width: 380px;
+  }
+  .sms-toolbar {
+    background: #f5efe7; border-bottom: 1px solid #ebe3d7;
+    padding: 12px 20px; text-align: center;
+    font-size: 13px; color: #8a8074; font-family: 'DM Sans', sans-serif; letter-spacing: 1px;
+  }
+  .sms-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .sms-bubble {
+    background: #ebe3d7; border-radius: 16px 16px 16px 4px;
+    padding: 12px 16px; font-size: 14px; color: #ccc; line-height: 1.6;
+    max-width: 90%;
+  }
+
+  /* What happened card */
+  .outcome {
+    background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.12);
+    border-left: 3px solid #ef4444; border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin-top: 20px;
+  }
+  .outcome-label { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #ef4444; margin-bottom: 8px; }
+  .outcome p { font-size: 14px; color: #8a8074; line-height: 1.65; }
+
+  /* CTA section */
+  .threats-cta {
+    background: #ffffff; border: 1px solid rgba(14,154,134,0.2);
+    border-top: 1px solid rgba(14,154,134,0.4);
+    border-radius: 18px; padding: 60px 40px;
+    text-align: center; max-width: 900px;
+    margin: 0 auto 80px; position: relative; z-index: 1;
+    box-shadow: 0 0 60px rgba(14,154,134,0.08);
+  }
+  @media (max-width: 600px) { .threats-cta { padding: 40px 24px; margin: 0 20px 60px; } }
+  .threats-cta h2 { font-size: clamp(26px, 4vw, 42px); font-weight: 700; margin-bottom: 16px; }
+  .threats-cta p { font-size: 16px; color: #8a8074; max-width: 520px; margin: 0 auto 32px; line-height: 1.7; }
+  .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .divider-line { height: 1px; background: linear-gradient(90deg, transparent, rgba(14,154,134,0.25), rgba(255,255,255,0.1), rgba(14,154,134,0.25), transparent); margin: 0 0 80px; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan-line"></div>
+<canvas id="bgCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7"></canvas>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='/'" style="cursor:pointer">NEXUS<span>SEC</span></div>
+  <div class="nav-links">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='/pages/about.html'">About</button>
+    <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+    <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+    <button class="active" onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+    <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+    <button onclick="window.location.href='/pages/login.html'" style="color:#33302b;border:1px solid #e2d9ca;border-radius:4px;margin-left:8px">Client Login</button>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <button onclick="window.location.href='/'">Home</button>
+  <button onclick="window.location.href='/pages/about.html'">About</button>
+  <button onclick="window.location.href='/pages/faq.html'">FAQ</button>
+  <button onclick="window.location.href='/pages/pricing.html'">Pricing</button>
+  <button onclick="window.location.href='/pages/threats.html'">Threats</button>
+    <button onclick="window.location.href='/pages/security.html'">Security</button>
+  <button onclick="window.location.href='/pages/contact.html'">Contact</button>
+  <button class="nav-mobile-login" onclick="window.location.href='/pages/login.html'">Client Login</button>
+</div>
+
+<!-- HERO -->
+<div class="threats-hero">
+  <div class="section-tag" style="justify-content:center;display:flex;margin-bottom:18px">Real Scams. Real Damage.</div>
+  <h1>Could You Spot<br><span class="line2">These Scams?</span></h1>
+  <p>These are real techniques used against small businesses every single day. They look professional. They feel urgent. Most people don't catch them in time.</p>
+
+  <div class="stat-row">
+    <div class="stat-row-item">
+      <span class="stat-row-num">94%</span>
+      <div class="stat-row-label">of malware arrives by email</div>
+    </div>
+    <div class="stat-row-item">
+      <span class="stat-row-num">$4,200</span>
+      <div class="stat-row-label">avg. loss per small biz attack</div>
+    </div>
+    <div class="stat-row-item">
+      <span class="stat-row-num">3 sec</span>
+      <div class="stat-row-label">to click a bad link</div>
+    </div>
+  </div>
+</div>
+
+<div class="threats-section">
+
+  <!-- EXAMPLE 1: Fake bank security alert -->
+  <div class="threat-block">
+    <div class="threat-label">Threat #1 — Phishing Email</div>
+    <h2 class="threat-title">The Fake Bank Security Alert</h2>
+    <p class="threat-sub">This is one of the most common scams. The email looks just like a real message from your bank — same logo, same style. It only takes one click to fall for it.</p>
+
+    <div class="email-shell">
+      <div class="email-toolbar">
+        <div class="email-dot" style="background:#ff5f57"></div>
+        <div class="email-dot" style="background:#febc2e"></div>
+        <div class="email-dot" style="background:#28c840"></div>
+      </div>
+      <div class="email-header">
+        <div class="email-from">From: <span>security-alerts@<span class="red-flag">firstnational-secure.com</span></span></div>
+        <div class="email-from" style="margin-top:4px">To: <span>you@yourbusiness.com</span></div>
+        <div class="email-subject" style="margin-top:10px">⚠️ Urgent: Suspicious login detected on your account</div>
+        <div class="email-date">Today at 9:14 AM</div>
+      </div>
+      <div class="email-body">
+        <div class="email-logo">🏦 FirstNational Bank</div>
+        <p><strong style="color:#2b2723">Dear Valued Customer,</strong></p>
+        <p>We have detected a <span class="red-flag">suspicious login attempt</span> on your business account from an unrecognized device located in <strong style="color:#ef4444">Lagos, Nigeria</strong>.</p>
+        <p>To protect your account, we have <strong style="color:#2b2723">temporarily limited access</strong>. You must verify your identity within <span class="red-flag">24 hours</span> or your account will be permanently suspended.</p>
+        <p>
+          <span class="email-btn">Verify My Account Now →</span>
+        </p>
+        <p style="font-size:12px;color:#948a7d">This message was sent to you@yourbusiness.com. If you did not request this, please <span class="email-link">click here to report</span>.</p>
+        <p style="font-size:11px;color:#ddd3c4">© 2026 FirstNational Bank, N.A. | 123 Financial Blvd, Chicago, IL 60601 | <span class="email-link">Unsubscribe</span></p>
+      </div>
+    </div>
+
+    <div class="flags">
+      <div class="flag">
+        <div class="flag-num">1</div>
+        <div class="flag-text">The sender's address is fake. It says <code style="color:#14b39c">firstnational-secure.com</code> — not your bank's real web address. Scammers set up look-alike addresses just for the scam.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">2</div>
+        <div class="flag-text">It tries to scare you into rushing. "24 hours or your account is closed" is meant to make you panic and act without thinking. A real bank gives you time — and calls you.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">3</div>
+        <div class="flag-text">The button is a trap. Clicking "Verify" takes you to a fake copy of your bank's login page. Whatever you type — your username, password, even your card number — goes straight to the scammer.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">4</div>
+        <div class="flag-text">It doesn't use your name. Your real bank knows your name and uses it. "Dear Valued Customer" means they have no idea who you are.</div>
+      </div>
+    </div>
+
+    <div class="outcome">
+      <div class="outcome-label">What it can cost you</div>
+      <p>A restaurant owner clicked "Verify" and typed in her login. Within 20 minutes, scammers moved <strong>$6,400</strong> out of her account. Her bank got $1,200 back — the other <strong>$5,200 was gone for good</strong>. That's payroll, rent, or a month of profit, gone in one click.</p>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- EXAMPLE 2: Fake invoice -->
+  <div class="threat-block">
+    <div class="threat-label">Threat #2 — Business Email Compromise</div>
+    <h2 class="threat-title">The Fake Vendor Invoice</h2>
+    <p class="threat-sub">A scammer pretends to be a company you already pay — a supplier, a contractor. They wait until you're expecting a bill, then send a fake one that asks you to pay a new bank account (theirs).</p>
+
+    <div class="email-shell">
+      <div class="email-toolbar">
+        <div class="email-dot" style="background:#ff5f57"></div>
+        <div class="email-dot" style="background:#febc2e"></div>
+        <div class="email-dot" style="background:#28c840"></div>
+      </div>
+      <div class="email-header">
+        <div class="email-from">From: <span>billing@<span class="red-flag">officesuppIies-co.com</span></span></div>
+        <div class="email-from" style="margin-top:4px">To: <span>accounts@yourbusiness.com</span></div>
+        <div class="email-subject" style="margin-top:10px">Invoice #4471 — Payment Due</div>
+        <div class="email-date">Today at 2:03 PM</div>
+      </div>
+      <div class="email-body">
+        <p><strong style="color:#2b2723">Hi,</strong></p>
+        <p>Please find attached Invoice #4471 for $2,850.00 for the office supplies order delivered on June 15th.</p>
+        <p><span class="red-flag">Please note our banking details have changed</span> as of this month. Kindly update your records and use the new account below for this payment:</p>
+        <div style="background:#f5efe7;border:1px solid #ebe3d7;border-radius:8px;padding:16px 20px;margin:16px 0;font-family:'DM Sans',sans-serif;font-size:13px;color:#948a7d">
+          Bank: First Commerce Bank<br>
+          Account Name: Office Supplies Co LLC<br>
+          Routing: 021000021<br>
+          Account: <span class="red-flag">7743920184</span>
+        </div>
+        <p>Please confirm receipt of this email so we can mark the invoice as pending payment.</p>
+        <p style="color:#8a8074">Best regards,<br>Jennifer Walsh<br>Accounts Receivable — Office Supplies Co</p>
+      </div>
+    </div>
+
+    <div class="flags">
+      <div class="flag">
+        <div class="flag-num">1</div>
+        <div class="flag-text">One letter is off. Look closely: it's a capital <strong style="color:#ef4444">I</strong> in "suppIies," not a lowercase <strong style="color:#14b39c">l</strong>. On a screen they look the same — that's the whole trick.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">2</div>
+        <div class="flag-text">"Our bank details have changed" is the #1 line scammers use. Before you ever pay a new account, call the company on a number you already have — never the number in the email.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">3</div>
+        <div class="flag-text">It wants you to reply. "Please confirm you got this" is bait — if you reply, the scammer knows a real person is reading and handling the money.</div>
+      </div>
+    </div>
+
+    <div class="outcome">
+      <div class="outcome-label">What it can cost you</div>
+      <p>A dental office paid <strong>$2,850</strong> to the "new" account. Two weeks later the real supplier called asking why they hadn't been paid. By then the money had been moved through several accounts overseas — <strong>impossible to get back</strong>.</p>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- EXAMPLE 3: IT helpdesk -->
+  <div class="threat-block">
+    <div class="threat-label">Threat #3 — IT Impersonation</div>
+    <h2 class="threat-title">The Fake IT Department Email</h2>
+    <p class="threat-sub">A scammer looks up who does your tech support (often right on LinkedIn), then emails your staff pretending to be them. People click because the name looks familiar.</p>
+
+    <div class="email-shell">
+      <div class="email-toolbar">
+        <div class="email-dot" style="background:#ff5f57"></div>
+        <div class="email-dot" style="background:#febc2e"></div>
+        <div class="email-dot" style="background:#28c840"></div>
+      </div>
+      <div class="email-header">
+        <div class="email-from">From: <span>mike.henderson@<span class="red-flag">yourbusiness-helpdesk.com</span></span></div>
+        <div class="email-from" style="margin-top:4px">To: <span>all-staff@yourbusiness.com</span></div>
+        <div class="email-subject" style="margin-top:10px">ACTION REQUIRED: Mandatory Microsoft 365 Re-authentication</div>
+        <div class="email-date">Today at 8:47 AM</div>
+      </div>
+      <div class="email-body">
+        <p><strong style="color:#2b2723">Hi everyone,</strong></p>
+        <p>As part of our <span class="red-flag">scheduled security upgrade</span>, all staff must re-authenticate their Microsoft 365 accounts by <strong style="color:#ef4444">end of business today</strong> or email access will be suspended until manual verification can be completed.</p>
+        <p>This takes less than 2 minutes. Please click the link below and log in with your current work credentials:</p>
+        <p><span class="email-link red-flag">https://microsoft365-reauth.yourbusiness-helpdesk.com/login</span></p>
+        <p>If you have any questions, reply to this email.</p>
+        <p style="color:#8a8074">Thanks,<br>Mike Henderson<br>IT Support — Your Business</p>
+        <p style="font-size:11px;color:#ddd3c4">Sent from IT Helpdesk Portal v3.2</p>
+      </div>
+    </div>
+
+    <div class="flags">
+      <div class="flag">
+        <div class="flag-num">1</div>
+        <div class="flag-text">The email is from outside your company. Your real IT sends from <code style="color:#14b39c">@yourbusiness.com</code>. This one is <code style="color:#ef4444">@yourbusiness-helpdesk.com</code> — close, but not yours.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">2</div>
+        <div class="flag-text">Everyone must act "today." Real IT changes are planned ahead, not rushed. The deadline is only there to stop you from pausing to double-check.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">3</div>
+        <div class="flag-text">The link steals your password. It has your company's name in it to look real, but it goes to the scammer. Type your password there and they get into your email — and everything linked to it.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">4</div>
+        <div class="flag-text">Questions "reply here" go to the scammer. If you email back to check, you're talking to the crook — not your real IT person.</div>
+      </div>
+    </div>
+
+    <div class="outcome">
+      <div class="outcome-label">What it can cost you</div>
+      <p>At a small law firm, seven people typed in their passwords before anyone thought to call IT. The scammer got into the email, quietly redirected a client's <strong>$31,000</strong> payment to themselves, and copied <strong>two years of private client files</strong>. Money lost, trust broken, and a possible lawsuit.</p>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- EXAMPLE 4: Smishing -->
+  <div class="threat-block">
+    <div class="threat-label">Threat #4 — SMS Phishing (Smishing)</div>
+    <h2 class="threat-title">The Fake Delivery Text</h2>
+    <p class="threat-sub">Scam texts are everywhere now, because people let their guard down on their phones. These look like a delivery update from UPS, FedEx, or the post office.</p>
+
+    <div style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start">
+      <div class="sms-shell">
+        <div class="sms-toolbar">Messages — USPS_NOTIFY</div>
+        <div class="sms-body">
+          <div class="sms-bubble">USPS: Your package could not be delivered due to an incomplete address. A $1.35 redelivery fee is required. Claim within 24 hours: <span style="color:#14b39c;text-decoration:underline">usps-<span class="red-flag" style="font-size:inherit">delivery-resc.com</span>/track</span></div>
+          <div class="sms-bubble" style="margin-top:4px">Failure to update will result in the package being returned to sender.</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:220px">
+        <div class="flags" style="margin-top:0">
+          <div class="flag">
+            <div class="flag-num">1</div>
+            <div class="flag-text">The link isn't the real company. The post office only uses <code style="color:#14b39c">usps.com</code>. Anything else is fake.</div>
+          </div>
+          <div class="flag">
+            <div class="flag-num">2</div>
+            <div class="flag-text">The tiny "fee" is the hook. $1.35 feels harmless — so you type in your card. But that page grabs your full card number, expiry, security code, and address.</div>
+          </div>
+          <div class="flag">
+            <div class="flag-num">3</div>
+            <div class="flag-text">It rushes you again. "Claim within 24 hours" is pressure to act fast. Real delivery notices don't expire like that.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="outcome" style="margin-top:28px">
+      <div class="outcome-label">What it can cost you</div>
+      <p>A shop owner was actually expecting a package, so the $1.35 "fee" seemed normal. She used her business debit card. By the next morning, <strong>$1,240 in fake charges</strong> had gone through from three different countries.</p>
+    </div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <!-- EXAMPLE 5: CEO fraud -->
+  <div class="threat-block">
+    <div class="threat-label">Threat #5 — CEO / Boss Fraud</div>
+    <h2 class="threat-title">The Urgent Wire Transfer Request</h2>
+    <p class="threat-sub">A scammer pretends to be the boss and messages whoever handles the money. They pile on pressure and secrecy — "I need this now, and keep it between us."</p>
+
+    <div class="email-shell">
+      <div class="email-toolbar">
+        <div class="email-dot" style="background:#ff5f57"></div>
+        <div class="email-dot" style="background:#febc2e"></div>
+        <div class="email-dot" style="background:#28c840"></div>
+      </div>
+      <div class="email-header">
+        <div class="email-from">From: <span>David Chen &lt;<span class="red-flag">david.chen.ceo@gmail.com</span>&gt;</span></div>
+        <div class="email-from" style="margin-top:4px">To: <span>sarah@yourbusiness.com</span></div>
+        <div class="email-subject" style="margin-top:10px">Quick favor — confidential</div>
+        <div class="email-date">Today at 4:58 PM</div>
+      </div>
+      <div class="email-body">
+        <p><strong style="color:#2b2723">Sarah,</strong></p>
+        <p>I'm currently in a <span class="red-flag">client meeting and can't talk</span>. I need you to handle an urgent wire transfer for me. This is time-sensitive — the deal closes tonight.</p>
+        <p>Amount: <strong style="color:#2b2723">$8,500</strong><br>
+        Please wire to:<br>
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#948a7d">TD Bank · Routing: 026013673 · Acct: 4492817364</span></p>
+        <p>I'll explain everything when I'm out of the meeting. <span class="red-flag">Please don't call me</span> — I'll be unavailable for the next 2 hours. Just reply here to confirm you've sent it.</p>
+        <p style="color:#8a8074">David<br>Sent from my iPhone</p>
+      </div>
+    </div>
+
+    <div class="flags">
+      <div class="flag">
+        <div class="flag-num">1</div>
+        <div class="flag-text">It's not the boss's real email. Your boss uses their work address. A Gmail or Yahoo address asking for money is a big red flag.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">2</div>
+        <div class="flag-text">"Don't call me" is the biggest warning sign. A real boss can always be reached. Telling you NOT to call is how the scammer stops you from checking.</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">3</div>
+        <div class="flag-text">"Keep it secret" + "do it now" is a trap. Together they stop anyone else from noticing and saying "wait, that's not right."</div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">4</div>
+        <div class="flag-text">The reason is vague on purpose. "The deal closes tonight" sounds believable but gives you nothing to check — a 30-second call would expose it.</div>
+      </div>
+    </div>
+
+    <div class="outcome">
+      <div class="outcome-label">What it can cost you</div>
+      <p>A bookkeeper at an HVAC company wired <strong>$8,500</strong> after getting an email just like this. She texted the owner two hours later to confirm — he was home on the couch, never sent it. They called the FBI. <strong>The money was never recovered.</strong></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA -->
+<div class="threats-cta">
+  <div class="section-tag" style="justify-content:center;display:flex;margin-bottom:14px">We Stop All of This</div>
+  <h2>Protection That Actually Works</h2>
+  <p>Nexus Security monitors your email, flags suspicious senders, blocks malicious links, and alerts you the moment something looks wrong — before anyone clicks anything.</p>
+  <div class="cta-btns">
+    <button class="btn-primary" onclick="window.location.href='/pages/contact.html'">Get Protected Today</button>
+    <button class="btn-outline" onclick="window.location.href='/pages/pricing.html'">See Pricing</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">NEXUS<span style="color:#14b39c">SEC</span></div>
+  <div class="footer-copy">© 2026 Nexus Security. All rights reserved.</div>
+  <div style="display:flex;gap:20px;font-size:12px;font-family:'DM Sans',sans-serif;letter-spacing:1px">
+    <a href="/pages/privacy.html" style="color:#948a7d;text-decoration:none">Privacy</a>
+    <a href="/pages/terms.html" style="color:#948a7d;text-decoration:none">Terms</a>
+  </div>
+</footer>
+
+<script src="../js/script.js"></script>
+</body>
+</html>
